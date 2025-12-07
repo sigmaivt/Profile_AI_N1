@@ -1,0 +1,718 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Retro_Zone | Кибер Клуб</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet">
+    
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              'retro-black': '#050505',
+              'retro-green': '#00ff41',
+              'retro-green-dim': '#008F11',
+              'retro-amber': '#ffb000',
+              'retro-purple': '#bf00ff',
+              'mech-bg': '#dcdcdc',
+              'mech-dark': '#888888',
+              'mech-light': '#ffffff',
+            },
+            fontFamily: {
+              'pixel': ['"Press Start 2P"', 'cursive'],
+              'terminal': ['"VT323"', 'monospace'],
+            },
+            animation: {
+              'blink': 'blink 1s step-end infinite',
+            }
+          }
+        }
+      }
+    </script>
+
+    <style>
+      /* --- GLOBAL STYLES --- */
+      body {
+        background-color: #000;
+        overflow-x: hidden;
+      }
+      ::-webkit-scrollbar { width: 12px; }
+      ::-webkit-scrollbar-track { background: #000; }
+      ::-webkit-scrollbar-thumb { background: #00ff41; border: 2px solid #000; }
+      
+      .blink { animation: blink 1s step-end infinite; }
+      @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
+
+      /* --- CRT OVERLAY --- */
+      .scanlines {
+        background: linear-gradient(
+          to bottom,
+          rgba(255,255,255,0),
+          rgba(255,255,255,0) 50%,
+          rgba(0,0,0,0.2) 50%,
+          rgba(0,0,0,0.2)
+        );
+        background-size: 100% 4px;
+        pointer-events: none;
+      }
+      .vignette {
+        background: radial-gradient(
+          circle,
+          rgba(0,0,0,0) 60%,
+          rgba(0,0,0,0.4) 90%,
+          rgba(0,0,0,0.8) 100%
+        );
+        pointer-events: none;
+      }
+
+      /* --- GAME CARDS & GLITCH --- */
+      @keyframes glitch-anim {
+        0% { clip-path: inset(10% 0 80% 0); transform: translate(-2px, 1px); filter: hue-rotate(0deg); }
+        20% { clip-path: inset(80% 0 5% 0); transform: translate(2px, -2px); filter: hue-rotate(90deg); }
+        40% { clip-path: inset(30% 0 50% 0); transform: translate(-3px, 3px); filter: hue-rotate(180deg); }
+        60% { clip-path: inset(70% 0 20% 0); transform: translate(3px, -1px); filter: hue-rotate(270deg); }
+        80% { clip-path: inset(10% 0 60% 0); transform: translate(-1px, 2px); filter: hue-rotate(0deg); }
+        100% { clip-path: inset(50% 0 30% 0); transform: translate(1px, -2px); filter: hue-rotate(90deg); }
+      }
+      
+      .game-card:hover .glitch-layer {
+        display: block;
+        animation: glitch-anim 0.25s infinite linear;
+      }
+
+      /* --- FOOTER ANIMATIONS --- */
+      /* Complex Pacman Route */
+      @keyframes pacman-complex-route {
+          0% { left: 8%; top: 88%; transform: translate(-50%, -50%) rotate(-90deg); opacity: 0; } /* Start Bottom-Left, Face Up */
+          5% { opacity: 1; }
+          
+          /* Leg 1: Move UP to Top-Left */
+          25% { left: 8%; top: 12%; transform: translate(-50%, -50%) rotate(-90deg); }
+          26% { left: 8%; top: 12%; transform: translate(-50%, -50%) rotate(0deg); } /* Turn Right */
+          
+          /* Leg 2: Move RIGHT to Top-Right */
+          50% { left: 92%; top: 12%; transform: translate(-50%, -50%) rotate(0deg); }
+          51% { left: 92%; top: 12%; transform: translate(-50%, -50%) rotate(90deg); } /* Turn Down */
+          
+          /* Leg 3: Move DOWN to Center-Right */
+          70% { left: 92%; top: 50%; transform: translate(-50%, -50%) rotate(90deg); }
+          71% { left: 92%; top: 50%; transform: translate(-50%, -50%) rotate(180deg); } /* Turn Left */
+          
+          /* Leg 4: Move LEFT to Center */
+          95% { left: 55%; top: 50%; transform: translate(-50%, -50%) rotate(180deg); opacity: 1; }
+          100% { left: 55%; top: 50%; transform: translate(-50%, -50%) rotate(180deg); opacity: 0; }
+      }
+
+      @keyframes waka {
+          0% { clip-path: polygon(100% 0%, 100% 100%, 50% 50%, 0% 100%, 0% 0%); } /* Open */
+          50% { clip-path: polygon(100% 0%, 100% 100%, 90% 50%, 0% 100%, 0% 0%); } /* Closed-ish */
+          100% { clip-path: polygon(100% 0%, 100% 100%, 50% 50%, 0% 100%, 0% 0%); }
+      }
+
+      /* Floppy Cycle: Insert from Bottom -> Read -> Eject Down */
+      @keyframes floppy-cycle {
+          0% { transform: translateY(120%); opacity: 0; }
+          10% { transform: translateY(120%); opacity: 1; }
+          30% { transform: translateY(0); opacity: 1; }
+          70% { transform: translateY(0); opacity: 1; }
+          85% { transform: translateY(120%); opacity: 1; }
+          95% { transform: translateY(120%); opacity: 0; }
+          100% { transform: translateY(120%); opacity: 0; }
+      }
+
+      @keyframes led-blink {
+          0%, 30% { background-color: #374151; box-shadow: none; }
+          35% { background-color: #00ff41; box-shadow: 0 0 8px #00ff41; }
+          40% { background-color: #374151; box-shadow: none; }
+          45% { background-color: #00ff41; box-shadow: 0 0 8px #00ff41; }
+          50% { background-color: #374151; box-shadow: none; }
+          55% { background-color: #00ff41; box-shadow: 0 0 8px #00ff41; }
+          60% { background-color: #374151; box-shadow: none; }
+          100% { background-color: #374151; box-shadow: none; }
+      }
+
+      .animate-pacman-complex { animation: pacman-complex-route 8s linear infinite; }
+      .pacman-mouth { animation: waka 0.3s steps(2) infinite; }
+      .animate-floppy-cycle { animation: floppy-cycle 4s ease-in-out infinite; }
+      .animate-drive-led { animation: led-blink 4s ease-in-out infinite; }
+
+      /* --- MECH BUTTON SCANLINES --- */
+      .btn-scanlines {
+        background: linear-gradient(to bottom, rgba(255,255,255,0), rgba(255,255,255,0) 50%, rgba(0,0,0,0.2) 50%, rgba(0,0,0,0.2));
+        background-size: 100% 4px;
+      }
+    </style>
+<script type="importmap">
+{
+  "imports": {
+    "react": "https://aistudiocdn.com/react@^19.2.1",
+    "react-dom/": "https://aistudiocdn.com/react-dom@^19.2.1/",
+    "react/": "https://aistudiocdn.com/react@^19.2.1/"
+  }
+}
+</script>
+</head>
+<body class="selection:bg-retro-green selection:text-black">
+
+    <!-- CANVAS LAYERS -->
+    <canvas id="matrix-canvas" class="fixed top-0 left-0 w-full h-full z-0 pointer-events-none"></canvas>
+    
+    <div id="crt-overlay" class="fixed inset-0 pointer-events-none z-50 overflow-hidden w-full h-full">
+        <div class="absolute inset-0 scanlines opacity-30"></div>
+        <div class="absolute inset-0 vignette"></div>
+        <div class="absolute inset-0 bg-retro-green mix-blend-overlay opacity-[0.03]"></div>
+    </div>
+
+    <canvas id="effects-canvas" class="fixed inset-0 pointer-events-none z-50"></canvas>
+
+    <!-- NAVIGATION -->
+    <nav class="sticky top-0 z-40 w-full backdrop-blur-md bg-black/60 border-b border-white/10 py-4">
+        <div class="max-w-7xl mx-auto flex flex-wrap justify-center gap-4">
+            <!-- Game Button -->
+            <div class="relative inline-block m-2 group">
+                <div class="absolute inset-0 bg-gray-800 rounded-md translate-y-2 translate-x-1 w-full h-full"></div>
+                <button onclick="handleNavClick('games', 'green')" class="relative font-pixel text-xs sm:text-sm font-bold uppercase tracking-widest px-6 py-4 sm:px-8 sm:py-5 bg-mech-bg text-gray-700 border-t-[4px] border-l-[4px] border-mech-light border-b-[6px] border-r-[6px] border-mech-dark rounded-md transition-all duration-75 active:translate-y-2 active:translate-x-1 active:border-b-[0px] active:border-r-[0px] active:border-t-[2px] active:border-l-[2px] hover:brightness-110 focus:outline-none shadow-[0px_10px_0px_0px_rgba(0,0,0,0.3)] active:shadow-none overflow-hidden">
+                    <span class="text-retro-green-dim drop-shadow-sm relative z-10">ИГРЫ</span>
+                    <div class="absolute inset-0 pointer-events-none opacity-0 group-hover:opacity-30 transition-opacity duration-300 z-0 btn-scanlines"></div>
+                </button>
+                <div class="absolute -inset-1 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 -z-10 blur-md bg-retro-green"></div>
+            </div>
+
+            <!-- Pricing Button -->
+            <div class="relative inline-block m-2 group">
+                <div class="absolute inset-0 bg-gray-800 rounded-md translate-y-2 translate-x-1 w-full h-full"></div>
+                <button onclick="handleNavClick('prices', 'amber')" class="relative font-pixel text-xs sm:text-sm font-bold uppercase tracking-widest px-6 py-4 sm:px-8 sm:py-5 bg-mech-bg text-gray-700 border-t-[4px] border-l-[4px] border-mech-light border-b-[6px] border-r-[6px] border-mech-dark rounded-md transition-all duration-75 active:translate-y-2 active:translate-x-1 active:border-b-[0px] active:border-r-[0px] active:border-t-[2px] active:border-l-[2px] hover:brightness-110 focus:outline-none shadow-[0px_10px_0px_0px_rgba(0,0,0,0.3)] active:shadow-none overflow-hidden">
+                    <span class="text-retro-amber drop-shadow-sm relative z-10">ЦЕНЫ</span>
+                    <div class="absolute inset-0 pointer-events-none opacity-0 group-hover:opacity-30 transition-opacity duration-300 z-0 btn-scanlines"></div>
+                </button>
+                <div class="absolute -inset-1 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 -z-10 blur-md bg-retro-amber"></div>
+            </div>
+
+            <!-- Contacts Button -->
+            <div class="relative inline-block m-2 group">
+                <div class="absolute inset-0 bg-gray-800 rounded-md translate-y-2 translate-x-1 w-full h-full"></div>
+                <button onclick="handleNavClick('contact', 'purple')" class="relative font-pixel text-xs sm:text-sm font-bold uppercase tracking-widest px-6 py-4 sm:px-8 sm:py-5 bg-mech-bg text-gray-700 border-t-[4px] border-l-[4px] border-mech-light border-b-[6px] border-r-[6px] border-mech-dark rounded-md transition-all duration-75 active:translate-y-2 active:translate-x-1 active:border-b-[0px] active:border-r-[0px] active:border-t-[2px] active:border-l-[2px] hover:brightness-110 focus:outline-none shadow-[0px_10px_0px_0px_rgba(0,0,0,0.3)] active:shadow-none overflow-hidden">
+                    <span class="text-retro-purple drop-shadow-sm relative z-10">КОНТАКТЫ</span>
+                    <div class="absolute inset-0 pointer-events-none opacity-0 group-hover:opacity-30 transition-opacity duration-300 z-0 btn-scanlines"></div>
+                </button>
+                <div class="absolute -inset-1 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 -z-10 blur-md bg-retro-purple"></div>
+            </div>
+        </div>
+    </nav>
+
+    <main class="relative z-10">
+        <!-- HERO SECTION -->
+        <section id="hero" class="min-h-[80vh] flex flex-col justify-center items-center text-center p-4 relative z-10">
+            <div class="bg-black/60 p-8 border-2 border-retro-green shadow-[0_0_20px_rgba(0,255,65,0.4)] backdrop-blur-sm relative overflow-hidden">
+                <pre class="font-terminal text-retro-green text-[0.6rem] sm:text-xs md:text-sm lg:text-base leading-[1.1] whitespace-pre hidden sm:block select-none">
+  _____      _                 ______               
+ |  __ \    | |               |___  /               
+ | |__) |___| |_ _ __ ___        / / ___  _ __   ___ 
+ |  _  // _ \ __| '__/ _ \      / / / _ \| '_ \ / _ \
+ | | \ \  __/ |_| | | (_) |    / /_| (_) | | | |  __/
+ |_|  \_\___|\__|_|  \___/    /_____\___/|_| |_|\___|
+                                                     
+                </pre>
+                
+                <h1 class="font-pixel text-4xl text-retro-green block sm:hidden mb-8">RETRO<br/>ZONE</h1>
+        
+                <div class="mt-8 font-terminal text-retro-amber text-xl md:text-2xl animate-pulse">
+                  &gt; СИСТЕМА ГОТОВА...<br/>
+                  &gt; ВСТАВЬТЕ МОНЕТУ...
+                </div>
+        
+                <div class="mt-12 max-w-2xl text-gray-300 font-pixel text-xs sm:text-sm leading-8">
+                  ДОБРО ПОЖАЛОВАТЬ В ЦЕНТР НОСТАЛЬГИИ.<br/>
+                  LAN ТУРНИРЫ. РЕТРО ЖЕЛЕЗО. ЧИСТЫЙ СКИЛЛ.<br/>
+                  <span class="text-retro-purple">БЕЗ ЛАГОВ. БЕЗ DLC. ТОЛЬКО ИГРА.</span>
+                </div>
+        
+                <div class="mt-16 text-left border-t border-retro-green/30 pt-4 opacity-70">
+                   <p class="font-terminal text-sm text-retro-green animate-[pulse_3s_ease-in-out_infinite]">
+                     <span class="text-white">root@matrix:~$</span> Проснись, Нео...
+                     <br/>
+                     <span class="text-white">root@matrix:~$</span> Следуй за белым кроликом. <span class="inline-block animate-bounce">🐇</span>
+                   </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- GAMES SECTION -->
+        <section id="games" class="py-20 px-4 max-w-6xl mx-auto relative z-10">
+            <div class="mb-12 border-b-4 border-retro-green inline-block pr-12">
+                <h2 class="text-3xl font-pixel text-white mb-2">БИБЛИОТЕКА_ИГР.EXE</h2>
+            </div>
+    
+            <div id="games-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+                <!-- Games will be injected by JS or hardcoded below -->
+                <!-- Hardcoding for Single File Reliability -->
+                
+                <!-- CS 1.6 -->
+                <div class="group relative game-card">
+                  <div class="absolute -inset-1 bg-retro-green opacity-0 group-hover:opacity-100 blur transition duration-500"></div>
+                  <div class="relative bg-retro-black border-2 border-retro-green p-2 h-full flex flex-col transition-transform duration-300 group-hover:-translate-y-1 overflow-hidden">
+                    <div class="w-full aspect-square mb-4 relative overflow-hidden border border-white/10 group-hover:border-white/40 transition-colors">
+                      <!-- Art -->
+                      <div class="w-full h-full relative z-10 bg-[#2a3038] overflow-hidden">
+                        <div class="absolute inset-0 opacity-20" style="background-image: radial-gradient(#4a5568 20%, transparent 20%), radial-gradient(#4a5568 20%, transparent 20%); background-size: 20px 20px; background-position: 0 0, 10px 10px;"></div>
+                        <div class="absolute inset-0 flex items-center justify-center"><div class="w-24 h-24 border-2 border-green-500 rounded-full flex items-center justify-center opacity-80 shadow-[0_0_10px_#0f0]"><div class="w-0.5 h-6 bg-green-500 absolute"></div><div class="w-6 h-0.5 bg-green-500 absolute"></div><div class="w-1.5 h-1.5 bg-red-500 rounded-full animate-pulse"></div></div></div>
+                        <div class="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0IiBoZWlnaHQ9IjQiPgo8cmVjdCB3aWR0aD0iNCIgaGVpZ2h0PSI0IiBmaWxsPSIjMDAwIiBvcGFjaXR5PSIwLjIiIC8+CjxyZWN0IHdpZHRoPSIxIiBoZWlnaHQ9IjEiIGZpbGw9IiNmZmYiIG9wYWNpdHk9IjAuMSIgLz4KPC9zdmc+')] opacity-50 pointer-events-none"></div>
+                      </div>
+                      <!-- Glitch Layer -->
+                      <div class="glitch-layer absolute inset-0 z-20 hidden pointer-events-none mix-blend-hard-light opacity-70">
+                         <div class="w-full h-full bg-[#2a3038]"><div class="absolute inset-0 flex items-center justify-center"><div class="w-24 h-24 border-2 border-green-500 rounded-full flex items-center justify-center"><div class="w-0.5 h-6 bg-green-500 absolute"></div><div class="w-6 h-0.5 bg-green-500 absolute"></div></div></div></div>
+                      </div>
+                      <div class="absolute inset-0 z-30 pointer-events-none bg-[linear-gradient(transparent_50%,rgba(0,0,0,0.5)_50%)] bg-[length:100%_4px]"></div>
+                      <div class="absolute bottom-2 right-2 bg-black/80 px-2 py-1 border border-retro-green/50 z-40"><span class="text-retro-green font-pixel text-[10px]">2000</span></div>
+                    </div>
+                    <div class="p-2 flex-grow flex flex-col justify-between relative z-10">
+                      <h3 class="font-pixel text-retro-green text-sm leading-tight mb-2 group-hover:text-retro-amber transition-colors">CS 1.6</h3>
+                      <div class="flex justify-between items-end border-t border-retro-green/30 pt-2"><span class="font-terminal text-retro-amber text-lg">FPS</span><span class="font-terminal text-gray-500 text-sm group-hover:text-white transition-colors animate-pulse">READY</span></div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Warcraft III -->
+                <div class="group relative game-card">
+                    <div class="absolute -inset-1 bg-retro-green opacity-0 group-hover:opacity-100 blur transition duration-500"></div>
+                    <div class="relative bg-retro-black border-2 border-retro-green p-2 h-full flex flex-col transition-transform duration-300 group-hover:-translate-y-1 overflow-hidden">
+                      <div class="w-full aspect-square mb-4 relative overflow-hidden border border-white/10 group-hover:border-white/40 transition-colors">
+                        <div class="w-full h-full relative z-10 bg-gradient-to-b from-blue-900 to-black overflow-hidden">
+                           <div class="absolute top-0 left-0 w-full h-full opacity-60"><div class="absolute top-0 left-1/4 w-12 h-32 bg-cyan-400 blur-xl transform -rotate-12 mix-blend-screen"></div><div class="absolute top-10 right-1/4 w-8 h-24 bg-blue-400 blur-lg transform rotate-12 mix-blend-screen"></div></div>
+                           <div class="absolute inset-0 flex items-center justify-center"><div class="w-20 h-20 border-4 border-cyan-500 rotate-45 flex items-center justify-center shadow-[0_0_20px_cyan] bg-black/30 backdrop-blur-sm"><div class="w-12 h-12 border-2 border-white rotate-45"></div></div></div>
+                           <div class="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0IiBoZWlnaHQ9IjQiPgo8cmVjdCB3aWR0aD0iNCIgaGVpZ2h0PSI0IiBmaWxsPSIjMDAwIiBvcGFjaXR5PSIwLjIiIC8+CjxyZWN0IHdpZHRoPSIxIiBoZWlnaHQ9IjEiIGZpbGw9IiNmZmYiIG9wYWNpdHk9IjAuMSIgLz4KPC9zdmc+')] opacity-50 pointer-events-none"></div>
+                        </div>
+                        <div class="glitch-layer absolute inset-0 z-20 hidden pointer-events-none mix-blend-hard-light opacity-70"><div class="w-full h-full bg-blue-900"></div></div>
+                        <div class="absolute inset-0 z-30 pointer-events-none bg-[linear-gradient(transparent_50%,rgba(0,0,0,0.5)_50%)] bg-[length:100%_4px]"></div>
+                        <div class="absolute bottom-2 right-2 bg-black/80 px-2 py-1 border border-retro-green/50 z-40"><span class="text-retro-green font-pixel text-[10px]">2002</span></div>
+                      </div>
+                      <div class="p-2 flex-grow flex flex-col justify-between relative z-10">
+                        <h3 class="font-pixel text-retro-green text-sm leading-tight mb-2 group-hover:text-retro-amber transition-colors">WARCRAFT III</h3>
+                        <div class="flex justify-between items-end border-t border-retro-green/30 pt-2"><span class="font-terminal text-retro-amber text-lg">RTS</span><span class="font-terminal text-gray-500 text-sm group-hover:text-white transition-colors animate-pulse">READY</span></div>
+                      </div>
+                    </div>
+                </div>
+
+                <!-- Quake III -->
+                <div class="group relative game-card">
+                    <div class="absolute -inset-1 bg-retro-green opacity-0 group-hover:opacity-100 blur transition duration-500"></div>
+                    <div class="relative bg-retro-black border-2 border-retro-green p-2 h-full flex flex-col transition-transform duration-300 group-hover:-translate-y-1 overflow-hidden">
+                      <div class="w-full aspect-square mb-4 relative overflow-hidden border border-white/10 group-hover:border-white/40 transition-colors">
+                        <div class="w-full h-full relative z-10 bg-[#3e0e0e] overflow-hidden">
+                           <div class="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-orange-600 via-red-900 to-black opacity-90"></div>
+                           <div class="absolute inset-0 flex items-center justify-center"><div class="w-24 h-24 border-8 border-orange-700 rounded-full relative shadow-[0_0_25px_orange] box-border"><div class="absolute bottom-1 left-1/2 w-4 h-14 bg-orange-700 transform -translate-x-1/2 translate-y-1/2 shadow-lg"></div><div class="absolute top-1/2 left-1/2 w-12 h-4 bg-orange-700 transform -translate-x-1/2 -translate-y-1/2 rotate-45"></div></div></div>
+                           <div class="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0IiBoZWlnaHQ9IjQiPgo8cmVjdCB3aWR0aD0iNCIgaGVpZ2h0PSI0IiBmaWxsPSIjMDAwIiBvcGFjaXR5PSIwLjIiIC8+CjxyZWN0IHdpZHRoPSIxIiBoZWlnaHQ9IjEiIGZpbGw9IiNmZmYiIG9wYWNpdHk9IjAuMSIgLz4KPC9zdmc+')] opacity-50 pointer-events-none"></div>
+                        </div>
+                        <div class="glitch-layer absolute inset-0 z-20 hidden pointer-events-none mix-blend-hard-light opacity-70"><div class="w-full h-full bg-red-900"></div></div>
+                        <div class="absolute inset-0 z-30 pointer-events-none bg-[linear-gradient(transparent_50%,rgba(0,0,0,0.5)_50%)] bg-[length:100%_4px]"></div>
+                        <div class="absolute bottom-2 right-2 bg-black/80 px-2 py-1 border border-retro-green/50 z-40"><span class="text-retro-green font-pixel text-[10px]">1999</span></div>
+                      </div>
+                      <div class="p-2 flex-grow flex flex-col justify-between relative z-10">
+                        <h3 class="font-pixel text-retro-green text-sm leading-tight mb-2 group-hover:text-retro-amber transition-colors">QUAKE III</h3>
+                        <div class="flex justify-between items-end border-t border-retro-green/30 pt-2"><span class="font-terminal text-retro-amber text-lg">ARENA</span><span class="font-terminal text-gray-500 text-sm group-hover:text-white transition-colors animate-pulse">READY</span></div>
+                      </div>
+                    </div>
+                </div>
+
+                <!-- StarCraft -->
+                <div class="group relative game-card">
+                    <div class="absolute -inset-1 bg-retro-green opacity-0 group-hover:opacity-100 blur transition duration-500"></div>
+                    <div class="relative bg-retro-black border-2 border-retro-green p-2 h-full flex flex-col transition-transform duration-300 group-hover:-translate-y-1 overflow-hidden">
+                      <div class="w-full aspect-square mb-4 relative overflow-hidden border border-white/10 group-hover:border-white/40 transition-colors">
+                        <div class="w-full h-full relative z-10 bg-black overflow-hidden">
+                           <div class="absolute inset-0" style="background-image: radial-gradient(white 1px, transparent 1px); background-size: 30px 30px; opacity: 0.6;"></div>
+                           <div class="absolute -bottom-10 -right-10 w-40 h-40 bg-blue-600 rounded-full blur-md opacity-80 shadow-[0_0_50px_blue]"></div>
+                           <div class="absolute inset-0 flex items-center justify-center"><div class="w-28 h-28 border-2 border-blue-400 rounded-full border-dashed animate-[spin_10s_linear_infinite] opacity-80"></div><div class="w-20 h-20 border border-blue-300 rounded-full border-dotted animate-[spin_5s_linear_infinite_reverse] opacity-60 absolute"></div></div>
+                           <div class="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0IiBoZWlnaHQ9IjQiPgo8cmVjdCB3aWR0aD0iNCIgaGVpZ2h0PSI0IiBmaWxsPSIjMDAwIiBvcGFjaXR5PSIwLjIiIC8+CjxyZWN0IHdpZHRoPSIxIiBoZWlnaHQ9IjEiIGZpbGw9IiNmZmYiIG9wYWNpdHk9IjAuMSIgLz4KPC9zdmc+')] opacity-50 pointer-events-none"></div>
+                        </div>
+                        <div class="glitch-layer absolute inset-0 z-20 hidden pointer-events-none mix-blend-hard-light opacity-70"><div class="w-full h-full bg-blue-900"></div></div>
+                        <div class="absolute inset-0 z-30 pointer-events-none bg-[linear-gradient(transparent_50%,rgba(0,0,0,0.5)_50%)] bg-[length:100%_4px]"></div>
+                        <div class="absolute bottom-2 right-2 bg-black/80 px-2 py-1 border border-retro-green/50 z-40"><span class="text-retro-green font-pixel text-[10px]">1998</span></div>
+                      </div>
+                      <div class="p-2 flex-grow flex flex-col justify-between relative z-10">
+                        <h3 class="font-pixel text-retro-green text-sm leading-tight mb-2 group-hover:text-retro-amber transition-colors">STARCRAFT</h3>
+                        <div class="flex justify-between items-end border-t border-retro-green/30 pt-2"><span class="font-terminal text-retro-amber text-lg">RTS</span><span class="font-terminal text-gray-500 text-sm group-hover:text-white transition-colors animate-pulse">READY</span></div>
+                      </div>
+                    </div>
+                </div>
+
+                <!-- Diablo II -->
+                <div class="group relative game-card">
+                  <div class="absolute -inset-1 bg-retro-green opacity-0 group-hover:opacity-100 blur transition duration-500"></div>
+                  <div class="relative bg-retro-black border-2 border-retro-green p-2 h-full flex flex-col transition-transform duration-300 group-hover:-translate-y-1 overflow-hidden">
+                    <div class="w-full aspect-square mb-4 relative overflow-hidden border border-white/10 group-hover:border-white/40 transition-colors">
+                      <div class="w-full h-full relative z-10 bg-black overflow-hidden">
+                         <div class="absolute bottom-0 w-full h-1/2 bg-gradient-to-t from-red-700 to-transparent opacity-70 mix-blend-color-dodge"></div>
+                         <div class="absolute inset-0 flex items-center justify-center"><svg viewBox="0 0 100 100" class="w-24 h-24 stroke-red-600 fill-none stroke-2 opacity-90 drop-shadow-[0_0_8px_red]"><polygon points="50,5 63,90 2,35 98,35 37,90" /><circle cx="50" cy="50" r="48" class="stroke-red-800" /></svg></div>
+                         <div class="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0IiBoZWlnaHQ9IjQiPgo8cmVjdCB3aWR0aD0iNCIgaGVpZ2h0PSI0IiBmaWxsPSIjMDAwIiBvcGFjaXR5PSIwLjIiIC8+CjxyZWN0IHdpZHRoPSIxIiBoZWlnaHQ9IjEiIGZpbGw9IiNmZmYiIG9wYWNpdHk9IjAuMSIgLz4KPC9zdmc+')] opacity-50 pointer-events-none"></div>
+                      </div>
+                      <div class="glitch-layer absolute inset-0 z-20 hidden pointer-events-none mix-blend-hard-light opacity-70"><div class="w-full h-full bg-red-950"></div></div>
+                      <div class="absolute inset-0 z-30 pointer-events-none bg-[linear-gradient(transparent_50%,rgba(0,0,0,0.5)_50%)] bg-[length:100%_4px]"></div>
+                      <div class="absolute bottom-2 right-2 bg-black/80 px-2 py-1 border border-retro-green/50 z-40"><span class="text-retro-green font-pixel text-[10px]">2000</span></div>
+                    </div>
+                    <div class="p-2 flex-grow flex flex-col justify-between relative z-10">
+                      <h3 class="font-pixel text-retro-green text-sm leading-tight mb-2 group-hover:text-retro-amber transition-colors">DIABLO II</h3>
+                      <div class="flex justify-between items-end border-t border-retro-green/30 pt-2"><span class="font-terminal text-retro-amber text-lg">RPG</span><span class="font-terminal text-gray-500 text-sm group-hover:text-white transition-colors animate-pulse">READY</span></div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Half-Life -->
+                <div class="group relative game-card">
+                  <div class="absolute -inset-1 bg-retro-green opacity-0 group-hover:opacity-100 blur transition duration-500"></div>
+                  <div class="relative bg-retro-black border-2 border-retro-green p-2 h-full flex flex-col transition-transform duration-300 group-hover:-translate-y-1 overflow-hidden">
+                    <div class="w-full aspect-square mb-4 relative overflow-hidden border border-white/10 group-hover:border-white/40 transition-colors">
+                      <div class="w-full h-full relative z-10 bg-[#1a1a1a] overflow-hidden border-2 border-orange-500/20">
+                         <div class="absolute inset-0 flex items-center justify-center"><div class="w-28 h-28 bg-orange-500 rounded-full blur-3xl opacity-30 animate-pulse"></div><div class="text-7xl font-sans font-bold text-orange-500 tracking-tighter select-none scale-150 drop-shadow-[0_0_10px_orange]">λ</div></div>
+                         <div class="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0IiBoZWlnaHQ9IjQiPgo8cmVjdCB3aWR0aD0iNCIgaGVpZ2h0PSI0IiBmaWxsPSIjMDAwIiBvcGFjaXR5PSIwLjIiIC8+CjxyZWN0IHdpZHRoPSIxIiBoZWlnaHQ9IjEiIGZpbGw9IiNmZmYiIG9wYWNpdHk9IjAuMSIgLz4KPC9zdmc+')] opacity-50 pointer-events-none"></div>
+                      </div>
+                      <div class="glitch-layer absolute inset-0 z-20 hidden pointer-events-none mix-blend-hard-light opacity-70"><div class="w-full h-full bg-orange-900"></div></div>
+                      <div class="absolute inset-0 z-30 pointer-events-none bg-[linear-gradient(transparent_50%,rgba(0,0,0,0.5)_50%)] bg-[length:100%_4px]"></div>
+                      <div class="absolute bottom-2 right-2 bg-black/80 px-2 py-1 border border-retro-green/50 z-40"><span class="text-retro-green font-pixel text-[10px]">1998</span></div>
+                    </div>
+                    <div class="p-2 flex-grow flex flex-col justify-between relative z-10">
+                      <h3 class="font-pixel text-retro-green text-sm leading-tight mb-2 group-hover:text-retro-amber transition-colors">HALF-LIFE</h3>
+                      <div class="flex justify-between items-end border-t border-retro-green/30 pt-2"><span class="font-terminal text-retro-amber text-lg">FPS</span><span class="font-terminal text-gray-500 text-sm group-hover:text-white transition-colors animate-pulse">READY</span></div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- DOTA -->
+                <div class="group relative game-card">
+                  <div class="absolute -inset-1 bg-retro-green opacity-0 group-hover:opacity-100 blur transition duration-500"></div>
+                  <div class="relative bg-retro-black border-2 border-retro-green p-2 h-full flex flex-col transition-transform duration-300 group-hover:-translate-y-1 overflow-hidden">
+                    <div class="w-full aspect-square mb-4 relative overflow-hidden border border-white/10 group-hover:border-white/40 transition-colors">
+                      <div class="w-full h-full relative z-10 bg-gray-900 overflow-hidden">
+                         <div class="absolute top-0 left-0 w-full h-full bg-gradient-to-br from-green-900 via-transparent to-red-900 opacity-90"></div>
+                         <div class="absolute inset-0 flex items-center justify-center"><div class="w-40 h-2 bg-gradient-to-r from-blue-400 to-blue-600 opacity-40 transform -rotate-45 shadow-[0_0_10px_blue]"></div><div class="absolute w-4 h-4 bg-red-600 rounded-full top-1/4 right-1/4 blur-sm animate-pulse"></div><div class="absolute w-4 h-4 bg-green-600 rounded-full bottom-1/4 left-1/4 blur-sm animate-pulse"></div></div>
+                         <div class="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0IiBoZWlnaHQ9IjQiPgo8cmVjdCB3aWR0aD0iNCIgaGVpZ2h0PSI0IiBmaWxsPSIjMDAwIiBvcGFjaXR5PSIwLjIiIC8+CjxyZWN0IHdpZHRoPSIxIiBoZWlnaHQ9IjEiIGZpbGw9IiNmZmYiIG9wYWNpdHk9IjAuMSIgLz4KPC9zdmc+')] opacity-50 pointer-events-none"></div>
+                      </div>
+                      <div class="glitch-layer absolute inset-0 z-20 hidden pointer-events-none mix-blend-hard-light opacity-70"><div class="w-full h-full bg-purple-900"></div></div>
+                      <div class="absolute inset-0 z-30 pointer-events-none bg-[linear-gradient(transparent_50%,rgba(0,0,0,0.5)_50%)] bg-[length:100%_4px]"></div>
+                      <div class="absolute bottom-2 right-2 bg-black/80 px-2 py-1 border border-retro-green/50 z-40"><span class="text-retro-green font-pixel text-[10px]">2003</span></div>
+                    </div>
+                    <div class="p-2 flex-grow flex flex-col justify-between relative z-10">
+                      <h3 class="font-pixel text-retro-green text-sm leading-tight mb-2 group-hover:text-retro-amber transition-colors">DOTA</h3>
+                      <div class="flex justify-between items-end border-t border-retro-green/30 pt-2"><span class="font-terminal text-retro-amber text-lg">MOBA</span><span class="font-terminal text-gray-500 text-sm group-hover:text-white transition-colors animate-pulse">READY</span></div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- UT 2004 -->
+                <div class="group relative game-card">
+                  <div class="absolute -inset-1 bg-retro-green opacity-0 group-hover:opacity-100 blur transition duration-500"></div>
+                  <div class="relative bg-retro-black border-2 border-retro-green p-2 h-full flex flex-col transition-transform duration-300 group-hover:-translate-y-1 overflow-hidden">
+                    <div class="w-full aspect-square mb-4 relative overflow-hidden border border-white/10 group-hover:border-white/40 transition-colors">
+                      <div class="w-full h-full relative z-10 bg-[#222] overflow-hidden">
+                         <div class="absolute inset-0 bg-gradient-to-tr from-yellow-800/40 via-yellow-500/20 to-transparent"></div>
+                         <div class="absolute inset-0 flex items-center justify-center"><div class="text-7xl font-black text-yellow-600 drop-shadow-[0_2px_0_rgba(255,255,255,0.2)]">U</div><div class="absolute text-7xl font-black text-yellow-500 blur-sm opacity-50">U</div></div>
+                         <div class="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0IiBoZWlnaHQ9IjQiPgo8cmVjdCB3aWR0aD0iNCIgaGVpZ2h0PSI0IiBmaWxsPSIjMDAwIiBvcGFjaXR5PSIwLjIiIC8+CjxyZWN0IHdpZHRoPSIxIiBoZWlnaHQ9IjEiIGZpbGw9IiNmZmYiIG9wYWNpdHk9IjAuMSIgLz4KPC9zdmc+')] opacity-50 pointer-events-none"></div>
+                      </div>
+                      <div class="glitch-layer absolute inset-0 z-20 hidden pointer-events-none mix-blend-hard-light opacity-70"><div class="w-full h-full bg-yellow-900"></div></div>
+                      <div class="absolute inset-0 z-30 pointer-events-none bg-[linear-gradient(transparent_50%,rgba(0,0,0,0.5)_50%)] bg-[length:100%_4px]"></div>
+                      <div class="absolute bottom-2 right-2 bg-black/80 px-2 py-1 border border-retro-green/50 z-40"><span class="text-retro-green font-pixel text-[10px]">2004</span></div>
+                    </div>
+                    <div class="p-2 flex-grow flex flex-col justify-between relative z-10">
+                      <h3 class="font-pixel text-retro-green text-sm leading-tight mb-2 group-hover:text-retro-amber transition-colors">UT 2004</h3>
+                      <div class="flex justify-between items-end border-t border-retro-green/30 pt-2"><span class="font-terminal text-retro-amber text-lg">ARENA</span><span class="font-terminal text-gray-500 text-sm group-hover:text-white transition-colors animate-pulse">READY</span></div>
+                    </div>
+                  </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- PRICING SECTION -->
+        <section id="prices" class="py-20 px-4 relative z-10 bg-retro-black/80">
+            <div class="max-w-4xl mx-auto border-4 border-double border-retro-purple p-8">
+              <h2 class="text-center font-pixel text-retro-purple text-2xl mb-8 blink">ПРАЙС_ЛИСТ</h2>
+              
+              <div class="font-terminal text-lg md:text-xl text-retro-green space-y-4">
+                <div class="flex justify-between border-b border-dashed border-gray-600 pb-2"><span>Стандарт_Час</span><span>100 ₽</span></div>
+                <div class="flex justify-between border-b border-dashed border-gray-600 pb-2"><span>Пакет_Ночь (22:00 - 06:00)</span><span>400 ₽</span></div>
+                <div class="flex justify-between border-b border-dashed border-gray-600 pb-2"><span>Пакет_День (10:00 - 22:00)</span><span>600 ₽</span></div>
+                <div class="flex justify-between border-b border-dashed border-gray-600 pb-2"><span>Воин_Выходного_Дня (Пт-Вс)</span><span>1500 ₽</span></div>
+                <div class="flex justify-between text-retro-amber pt-4"><span>VIP_Комната (Консоль + Диван)</span><span>+ 150 ₽/час</span></div>
+              </div>
+      
+              <div class="mt-8 text-center">
+                 <p class="font-pixel text-xs text-gray-500 uppercase">
+                   * Скидка 10% на снеки для членов клуба<br/>
+                   * Сохранение на дискету: Бесплатно
+                 </p>
+              </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- FOOTER -->
+    <footer id="contact" class="py-12 bg-gray-900 border-t-4 border-retro-green relative z-10">
+        <div class="max-w-6xl mx-auto px-4 grid grid-cols-1 md:grid-cols-2 gap-8 font-terminal text-white">
+          
+          <!-- Contact Info -->
+          <div>
+            <h3 class="font-pixel text-retro-green mb-4">КОНТАКТЫ</h3>
+            <ul class="space-y-4 text-xl mb-8">
+               <li class="flex items-center"><span class="text-retro-amber mr-2">АДРЕС:</span> Цокольный этаж, Сектор 7, дом 42</li>
+               <li class="flex items-center"><span class="text-retro-amber mr-2">ТЕЛЕФОН:</span> 555-1337-99</li>
+               <li class="flex items-center group overflow-visible">
+                 <span class="text-retro-amber mr-2">ПОЧТА:</span> admin@retro.zone
+                 <!-- Animated Floppy Drive -->
+                 <div class="ml-4 w-14 h-8 bg-[#C0C0C0] border-t-2 border-l-2 border-white border-b-2 border-r-2 border-gray-600 relative flex items-center justify-center rounded-sm shadow-md">
+                    <div class="absolute inset-0 bg-[#d4d4d4] z-20 flex flex-col items-center justify-center px-1">
+                      <div class="w-full h-1.5 bg-black rounded-full mb-1 border-b border-gray-500"></div>
+                      <div class="w-full flex justify-between px-1 mt-0.5 items-center">
+                        <div class="w-2 h-1 bg-gray-700 animate-drive-led border border-gray-500"></div>
+                        <div class="w-3 h-1.5 bg-gray-500 border-t border-l border-white border-b border-r border-gray-700 active:border-inset"></div>
+                      </div>
+                    </div>
+                    <div class="w-10 h-6 bg-blue-700 absolute z-10 animate-floppy-cycle rounded-[1px] flex flex-col items-center pt-0.5 shadow-sm border border-blue-900">
+                       <div class="w-6 h-3 bg-gray-300 rounded-sm overflow-hidden relative"><div class="w-1.5 h-full bg-black/20 ml-1 absolute"></div></div>
+                       <div class="w-8 h-1.5 bg-white mt-0.5"></div>
+                    </div>
+                 </div>
+               </li>
+            </ul>
+  
+            <!-- Terminal Input -->
+            <div class="bg-black p-4 border border-gray-700 font-mono text-retro-green hidden md:block shadow-inner min-h-[120px]">
+              <div class="flex flex-col gap-1">
+                <p>server@retro_zone:~$ ping user</p>
+                <p class="text-gray-400">64 bytes from 127.0.0.1: icmp_seq=1 ttl=64 time=0.045 ms</p>
+                <p class="flex items-center"><span>server@retro_zone:~$</span><span class="animate-blink inline-block w-3 h-5 bg-retro-green ml-1"></span></p>
+              </div>
+            </div>
+          </div>
+  
+          <!-- PACMAN MAP -->
+          <div class="flex flex-col">
+            <h3 class="font-pixel text-retro-amber mb-4">КАРТА_ЛОКАЦИИ.MAP</h3>
+            <div class="bg-black border-4 border-blue-800 p-1 relative h-64 w-full max-w-md mx-auto shadow-[0_0_15px_rgba(0,0,255,0.5)] overflow-hidden">
+              
+              <!-- Walls -->
+              <div class="absolute inset-0">
+                 <div class="absolute inset-2 border-2 border-blue-900/50 rounded-lg"></div>
+                 <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-32 h-20 border-2 border-blue-600 bg-blue-900/10 shadow-[0_0_10px_blue] rounded-sm">
+                   <div class="absolute top-1/2 right-0 w-8 h-1 bg-black transform translate-x-1/2 -translate-y-1/2 border-x-2 border-white/50"></div> 
+                 </div>
+                 <div class="absolute top-1/4 left-1/4 w-2 h-1/2 bg-blue-800 rounded-full border border-blue-500"></div>
+                 <div class="absolute top-1/4 left-1/4 w-1/2 h-2 bg-blue-800 rounded-full border border-blue-500"></div>
+                 <div class="absolute top-1/4 right-1/4 w-2 h-16 bg-blue-800 rounded-full border border-blue-500"></div>
+                 <div class="absolute bottom-1/4 right-1/4 w-2 h-12 bg-blue-800 rounded-full border border-blue-500"></div>
+              </div>
+  
+              <!-- Dots -->
+              <div class="absolute bottom-16 left-[8%] w-1 h-1 bg-pink-200/70 rounded-full"></div>
+              <div class="absolute bottom-32 left-[8%] w-1 h-1 bg-pink-200/70 rounded-full"></div>
+              <div class="absolute top-32 left-[8%] w-1 h-1 bg-pink-200/70 rounded-full"></div>
+              <div class="absolute top-16 left-[8%] w-1 h-1 bg-pink-200/70 rounded-full"></div>
+              <div class="absolute top-[12%] left-1/4 w-1 h-1 bg-pink-200/70 rounded-full"></div>
+              <div class="absolute top-[12%] left-1/2 w-1 h-1 bg-pink-200/70 rounded-full"></div>
+              <div class="absolute top-[12%] right-1/4 w-1 h-1 bg-pink-200/70 rounded-full"></div>
+              <div class="absolute top-[25%] right-[8%] w-1 h-1 bg-pink-200/70 rounded-full"></div>
+              <div class="absolute top-[40%] right-[8%] w-1 h-1 bg-pink-200/70 rounded-full"></div>
+              <div class="absolute top-[50%] right-[20%] w-1 h-1 bg-pink-200/70 rounded-full"></div>
+  
+              <div class="absolute bottom-4 left-4 w-8 h-8 border border-dashed border-gray-600 rounded-full flex items-center justify-center">
+                <span class="absolute -bottom-4 text-[8px] text-gray-500 font-pixel whitespace-nowrap">ВХОД</span>
+              </div>
+  
+              <!-- Pacman -->
+              <div class="absolute w-5 h-5 animate-pacman-complex z-30">
+                <div class="w-full h-full bg-yellow-400 rounded-full relative overflow-hidden">
+                   <div class="absolute inset-0 bg-black pacman-mouth origin-center"></div>
+                </div>
+              </div>
+  
+              <!-- Ghost -->
+              <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 mt-2 z-10">
+                 <div class="w-6 h-6 bg-red-600 rounded-t-xl relative shadow-[0_0_10px_red]">
+                   <div class="absolute top-2 left-1 w-2 h-2 bg-white rounded-full"><div class="absolute top-1 right-0.5 w-1 h-1 bg-blue-900 rounded-full"></div></div>
+                   <div class="absolute top-2 right-1 w-2 h-2 bg-white rounded-full"><div class="absolute top-1 right-0.5 w-1 h-1 bg-blue-900 rounded-full"></div></div>
+                   <div class="absolute bottom-0 w-full flex justify-between px-0.5"><div class="w-1.5 h-1.5 bg-black rounded-t-full"></div><div class="w-1.5 h-1.5 bg-black rounded-t-full"></div><div class="w-1.5 h-1.5 bg-black rounded-t-full"></div></div>
+                 </div>
+                 <div class="absolute -top-4 left-1/2 -translate-x-1/2 text-[8px] text-retro-green font-pixel whitespace-nowrap">МЫ ТУТ</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="text-center mt-12 font-pixel text-[10px] text-gray-600">
+          © 2024 RETRO_ZONE. ВСЕ ПРАВА ЗАЩИЩЕНЫ. ОПТИМИЗИРОВАНО ПОД 800x600.
+        </div>
+    </footer>
+
+    <!-- SCRIPTS -->
+    <script>
+        // --- 1. MATRIX RAIN EFFECT ---
+        (function() {
+            const canvas = document.getElementById('matrix-canvas');
+            const ctx = canvas.getContext('2d');
+            
+            const katakana = 'ｱｲｳｴｵｶｷｸｹｺｻｼｽｾｿﾀﾁﾂﾃﾄﾅﾆﾇﾈﾉﾊﾋﾌﾍﾎﾏﾐﾑﾒﾓﾔﾕﾖﾗﾘﾙﾚﾛﾜﾝ';
+            const latin = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+            const nums = '0123456789';
+            const symbols = '$+-*/=%"\'#&_(),.;:?!\\|{}<>[]^~';
+            const chars = katakana + latin + nums + symbols;
+            
+            const fontSize = 16;
+            let drops = [];
+
+            function resize() {
+                canvas.width = window.innerWidth;
+                canvas.height = window.innerHeight;
+                const columns = Math.ceil(canvas.width / fontSize);
+                drops = new Array(columns).fill(0).map(() => Math.floor(Math.random() * -50));
+            }
+
+            function draw() {
+                ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+                ctx.font = `${fontSize}px "VT323", monospace`;
+
+                for (let i = 0; i < drops.length; i++) {
+                    const text = chars[Math.floor(Math.random() * chars.length)];
+                    const x = i * fontSize;
+                    const y = drops[i] * fontSize;
+
+                    const random = Math.random();
+                    if (random > 0.98) ctx.fillStyle = '#FFF';
+                    else if (random > 0.8) ctx.fillStyle = '#00FF41';
+                    else ctx.fillStyle = '#008F11';
+
+                    ctx.fillText(text, x, y);
+
+                    if (y > canvas.height && Math.random() > 0.975) {
+                        drops[i] = 0;
+                    }
+                    drops[i]++;
+                }
+            }
+
+            window.addEventListener('resize', resize);
+            resize();
+            setInterval(draw, 33);
+        })();
+
+        // --- 2. PARTICLE EFFECTS ---
+        const effectsCanvas = document.getElementById('effects-canvas');
+        const effectsCtx = effectsCanvas.getContext('2d');
+        let particles = [];
+
+        function resizeEffects() {
+            effectsCanvas.width = window.innerWidth;
+            effectsCanvas.height = window.innerHeight;
+        }
+        window.addEventListener('resize', resizeEffects);
+        resizeEffects();
+
+        function createBurst(x, y, color) {
+            for (let i = 0; i < 20; i++) {
+                const angle = Math.random() * Math.PI * 2;
+                const speed = Math.random() * 5 + 2;
+                particles.push({
+                    x: x,
+                    y: y,
+                    vx: Math.cos(angle) * speed,
+                    vy: Math.sin(angle) * speed,
+                    life: 1.0,
+                    color: color,
+                    size: Math.random() * 4 + 2
+                });
+            }
+        }
+
+        function renderEffects() {
+            effectsCtx.clearRect(0, 0, effectsCanvas.width, effectsCanvas.height);
+            for (let i = particles.length - 1; i >= 0; i--) {
+                const p = particles[i];
+                p.x += p.vx;
+                p.y += p.vy;
+                p.life -= 0.02;
+                p.vy += 0.2; // Gravity
+
+                if (p.life <= 0) {
+                    particles.splice(i, 1);
+                } else {
+                    effectsCtx.fillStyle = p.color;
+                    effectsCtx.globalAlpha = p.life;
+                    effectsCtx.fillRect(Math.floor(p.x), Math.floor(p.y), p.size, p.size);
+                }
+            }
+            effectsCtx.globalAlpha = 1.0;
+            requestAnimationFrame(renderEffects);
+        }
+        renderEffects();
+
+        // --- 3. AUDIO & NAVIGATION ---
+        function playMechanicalClick() {
+            const AudioContext = window.AudioContext || window.webkitAudioContext;
+            if (!AudioContext) return;
+            const ctx = new AudioContext();
+            const t = ctx.currentTime;
+
+            // Click
+            const osc1 = ctx.createOscillator();
+            const gain1 = ctx.createGain();
+            osc1.type = 'triangle';
+            osc1.frequency.setValueAtTime(1500, t);
+            osc1.frequency.exponentialRampToValueAtTime(400, t + 0.04);
+            gain1.gain.setValueAtTime(0, t);
+            gain1.gain.linearRampToValueAtTime(0.1, t + 0.01);
+            gain1.gain.exponentialRampToValueAtTime(0.001, t + 0.05);
+            osc1.connect(gain1);
+            gain1.connect(ctx.destination);
+            osc1.start(t);
+            osc1.stop(t + 0.05);
+
+            // Thock
+            const osc2 = ctx.createOscillator();
+            const gain2 = ctx.createGain();
+            osc2.type = 'square';
+            osc2.frequency.setValueAtTime(200, t);
+            osc2.frequency.exponentialRampToValueAtTime(50, t + 0.1);
+            gain2.gain.setValueAtTime(0, t);
+            gain2.gain.linearRampToValueAtTime(0.1, t + 0.01);
+            gain2.gain.exponentialRampToValueAtTime(0.001, t + 0.1);
+            const filter = ctx.createBiquadFilter();
+            filter.type = 'lowpass';
+            filter.frequency.setValueAtTime(1000, t);
+            osc2.connect(filter);
+            filter.connect(gain2);
+            gain2.connect(ctx.destination);
+            osc2.start(t);
+            osc2.stop(t + 0.1);
+        }
+
+        function handleNavClick(id, colorName) {
+            const colors = {
+                'green': '#00ff41',
+                'amber': '#ffb000',
+                'purple': '#bf00ff'
+            };
+            
+            // Audio
+            playMechanicalClick();
+
+            // Particles
+            // Note: In vanilla onclick, we might not get precise coordinates easily passed 
+            // without the event object, so we default to center screen if needed, 
+            // but let's grab the event from window.event
+            const e = window.event;
+            if(e) {
+                createBurst(e.clientX, e.clientY, colors[colorName]);
+            }
+
+            // Scroll
+            const element = document.getElementById(id);
+            if (element) {
+                element.scrollIntoView({ behavior: 'smooth' });
+            }
+        }
+    </script>
+</body>
+</html>
