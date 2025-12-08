@@ -146,6 +146,17 @@
         background: linear-gradient(to bottom, rgba(255,255,255,0), rgba(255,255,255,0) 50%, rgba(0,0,0,0.2) 50%, rgba(0,0,0,0.2));
         background-size: 100% 4px;
       }
+
+      /* --- SHIMMER EFFECT --- */
+      @keyframes shimmer {
+        0% { box-shadow: 0 0 5px #00ff41, 0 0 10px #00ff41, 0 0 15px #00ff41; }
+        33% { box-shadow: 0 0 5px #ffb000, 0 0 10px #ffb000, 0 0 15px #ffb000; }
+        66% { box-shadow: 0 0 5px #bf00ff, 0 0 10px #bf00ff, 0 0 15px #bf00ff; }
+        100% { box-shadow: 0 0 5px #00ff41, 0 0 10px #00ff41, 0 0 15px #00ff41; }
+      }
+      .shimmer {
+        animation: shimmer 3s ease-in-out infinite;
+      }
     </style>
 <script type="importmap">
 {
@@ -170,13 +181,48 @@
 
     <canvas id="effects-canvas" class="fixed inset-0 pointer-events-none z-50"></canvas>
 
+    <!-- SNAKE GAME MODAL -->
+    <div id="snake-game" class="fixed inset-0 bg-black/80 flex items-center justify-center" style="display: none; z-index: 9999;">
+        <!-- START SCREEN -->
+        <div id="snake-start" class="bg-retro-black border-2 border-retro-green p-8 shadow-[0_0_20px_rgba(0,255,65,0.5)] text-center">
+            <h3 class="font-pixel text-retro-green text-2xl mb-6">ЗМЕЙКА</h3>
+            <p class="font-terminal text-retro-amber text-lg mb-8">НУ, ЧТО? РУБАНЕМСЯ?<br/>ПОБЕДИТЕЛЮ СКИДКА!</p>
+            <button onclick="startSnakeGame()" class="bg-retro-green text-black px-6 py-3 font-pixel text-lg hover:bg-retro-amber transition-colors">ПОЕХАЛИ</button>
+        </div>
+
+        <!-- GAME SCREEN -->
+        <div id="snake-gameplay" class="bg-retro-black border-2 border-retro-green p-4 shadow-[0_0_20px_rgba(0,255,65,0.5)]" style="display: none;">
+            <h3 class="font-pixel text-retro-green text-center mb-4">ЗМЕЙКА</h3>
+            <canvas id="snake-canvas" width="320" height="320" class="block border border-retro-green/50"></canvas>
+            <div id="snake-score" class="font-terminal text-retro-green text-center mt-2">Осталось: 20</div>
+            <div class="flex justify-between mt-4">
+                <button onclick="toggleMusic()" id="music-btn" class="bg-retro-amber text-black px-4 py-2 font-pixel">МУЗЫКА: ВКЛ</button>
+                <button onclick="closeSnake()" class="bg-retro-green text-black px-4 py-2 font-pixel">ВЫХОД</button>
+            </div>
+        </div>
+
+        <!-- WIN SCREEN -->
+        <div id="snake-win" class="bg-retro-black border-2 border-retro-green p-8 shadow-[0_0_20px_rgba(0,255,65,0.5)] text-center" style="display: none;">
+            <h3 class="font-pixel text-retro-green text-2xl mb-6">ПОБЕДА!</h3>
+            <p class="font-terminal text-retro-amber text-lg mb-8">ТЫ ВЫИГРАЛ!<br/>ПРОМОКОД ДЛЯ СКИДКИ 20%<br/>МОРФЕУС</p>
+            <p class="font-terminal text-gray-400 text-sm">Нажми любую клавишу для выхода</p>
+        </div>
+
+        <!-- LOSE SCREEN -->
+        <div id="snake-lose" class="bg-retro-black border-2 border-retro-green p-8 shadow-[0_0_20px_rgba(0,255,65,0.5)] text-center" style="display: none;">
+            <h3 class="font-pixel text-red-500 text-2xl mb-6">ПРОИГРЫШ!</h3>
+            <p class="font-terminal text-retro-amber text-lg mb-8">ТЫ ПРОИГРАЛ!<br/>ПОПРОБУЙ В СЛЕДУЮЩИЙ РАЗ,<br/>МОЖЕТ ТЕБЕ ПОВЕЗЁТ!</p>
+            <p class="font-terminal text-gray-400 text-sm">Нажми любую клавишу для выхода</p>
+        </div>
+    </div>
+
     <!-- NAVIGATION -->
     <nav class="sticky top-0 z-40 w-full backdrop-blur-md bg-black/60 border-b border-white/10 py-4">
         <div class="max-w-7xl mx-auto flex flex-wrap justify-center gap-4">
             <!-- Game Button -->
             <div class="relative inline-block m-2 group">
                 <div class="absolute inset-0 bg-gray-800 rounded-md translate-y-2 translate-x-1 w-full h-full"></div>
-                <button onclick="handleNavClick('games', 'green')" class="relative font-pixel text-xs sm:text-sm font-bold uppercase tracking-widest px-6 py-4 sm:px-8 sm:py-5 bg-mech-bg text-gray-700 border-t-[4px] border-l-[4px] border-mech-light border-b-[6px] border-r-[6px] border-mech-dark rounded-md transition-all duration-75 active:translate-y-2 active:translate-x-1 active:border-b-[0px] active:border-r-[0px] active:border-t-[2px] active:border-l-[2px] hover:brightness-110 focus:outline-none shadow-[0px_10px_0px_0px_rgba(0,0,0,0.3)] active:shadow-none overflow-hidden">
+                <button onclick="handleNavClick('games', 'green', event)" class="relative font-pixel text-xs sm:text-sm font-bold uppercase tracking-widest px-6 py-4 sm:px-8 sm:py-5 bg-mech-bg text-gray-700 border-t-[4px] border-l-[4px] border-mech-light border-b-[6px] border-r-[6px] border-mech-dark rounded-md transition-all duration-75 active:translate-y-2 active:translate-x-1 active:border-b-[0px] active:border-r-[0px] active:border-t-[2px] active:border-l-[2px] hover:brightness-110 focus:outline-none shadow-[0px_10px_0px_0px_rgba(0,0,0,0.3)] active:shadow-none overflow-hidden">
                     <span class="text-retro-green-dim drop-shadow-sm relative z-10">ИГРЫ</span>
                     <div class="absolute inset-0 pointer-events-none opacity-0 group-hover:opacity-30 transition-opacity duration-300 z-0 btn-scanlines"></div>
                 </button>
@@ -186,8 +232,18 @@
             <!-- Pricing Button -->
             <div class="relative inline-block m-2 group">
                 <div class="absolute inset-0 bg-gray-800 rounded-md translate-y-2 translate-x-1 w-full h-full"></div>
-                <button onclick="handleNavClick('prices', 'amber')" class="relative font-pixel text-xs sm:text-sm font-bold uppercase tracking-widest px-6 py-4 sm:px-8 sm:py-5 bg-mech-bg text-gray-700 border-t-[4px] border-l-[4px] border-mech-light border-b-[6px] border-r-[6px] border-mech-dark rounded-md transition-all duration-75 active:translate-y-2 active:translate-x-1 active:border-b-[0px] active:border-r-[0px] active:border-t-[2px] active:border-l-[2px] hover:brightness-110 focus:outline-none shadow-[0px_10px_0px_0px_rgba(0,0,0,0.3)] active:shadow-none overflow-hidden">
+                <button onclick="handleNavClick('prices', 'amber', event)" class="relative font-pixel text-xs sm:text-sm font-bold uppercase tracking-widest px-6 py-4 sm:px-8 sm:py-5 bg-mech-bg text-gray-700 border-t-[4px] border-l-[4px] border-mech-light border-b-[6px] border-r-[6px] border-mech-dark rounded-md transition-all duration-75 active:translate-y-2 active:translate-x-1 active:border-b-[0px] active:border-r-[0px] active:border-t-[2px] active:border-l-[2px] hover:brightness-110 focus:outline-none shadow-[0px_10px_0px_0px_rgba(0,0,0,0.3)] active:shadow-none overflow-hidden">
                     <span class="text-retro-amber drop-shadow-sm relative z-10">ЦЕНЫ</span>
+                    <div class="absolute inset-0 pointer-events-none opacity-0 group-hover:opacity-30 transition-opacity duration-300 z-0 btn-scanlines"></div>
+                </button>
+                <div class="absolute -inset-1 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 -z-10 blur-md bg-retro-amber"></div>
+            </div>
+
+            <!-- Online Game Button -->
+            <div class="relative inline-block m-2 group">
+                <div class="absolute inset-0 bg-gray-800 rounded-md translate-y-2 translate-x-1 w-full h-full"></div>
+                <button onclick="handleSnakeClick()" class="relative font-pixel text-xs sm:text-sm font-bold uppercase tracking-widest px-6 py-4 sm:px-8 sm:py-5 bg-mech-bg text-gray-700 border-t-[4px] border-l-[4px] border-mech-light border-b-[6px] border-r-[6px] border-mech-dark rounded-md transition-all duration-75 active:translate-y-2 active:translate-x-1 active:border-b-[0px] active:border-r-[0px] active:border-t-[2px] active:border-l-[2px] hover:brightness-110 focus:outline-none shadow-[0px_10px_0px_0px_rgba(0,0,0,0.3)] active:shadow-none overflow-hidden shimmer">
+                    <span class="text-red-500 drop-shadow-sm relative z-10">ИГРА ОН-ЛАЙН</span>
                     <div class="absolute inset-0 pointer-events-none opacity-0 group-hover:opacity-30 transition-opacity duration-300 z-0 btn-scanlines"></div>
                 </button>
                 <div class="absolute -inset-1 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 -z-10 blur-md bg-retro-amber"></div>
@@ -196,7 +252,7 @@
             <!-- Contacts Button -->
             <div class="relative inline-block m-2 group">
                 <div class="absolute inset-0 bg-gray-800 rounded-md translate-y-2 translate-x-1 w-full h-full"></div>
-                <button onclick="handleNavClick('contact', 'purple')" class="relative font-pixel text-xs sm:text-sm font-bold uppercase tracking-widest px-6 py-4 sm:px-8 sm:py-5 bg-mech-bg text-gray-700 border-t-[4px] border-l-[4px] border-mech-light border-b-[6px] border-r-[6px] border-mech-dark rounded-md transition-all duration-75 active:translate-y-2 active:translate-x-1 active:border-b-[0px] active:border-r-[0px] active:border-t-[2px] active:border-l-[2px] hover:brightness-110 focus:outline-none shadow-[0px_10px_0px_0px_rgba(0,0,0,0.3)] active:shadow-none overflow-hidden">
+                <button onclick="handleNavClick('contact', 'purple', event)" class="relative font-pixel text-xs sm:text-sm font-bold uppercase tracking-widest px-6 py-4 sm:px-8 sm:py-5 bg-mech-bg text-gray-700 border-t-[4px] border-l-[4px] border-mech-light border-b-[6px] border-r-[6px] border-mech-dark rounded-md transition-all duration-75 active:translate-y-2 active:translate-x-1 active:border-b-[0px] active:border-r-[0px] active:border-t-[2px] active:border-l-[2px] hover:brightness-110 focus:outline-none shadow-[0px_10px_0px_0px_rgba(0,0,0,0.3)] active:shadow-none overflow-hidden">
                     <span class="text-retro-purple drop-shadow-sm relative z-10">КОНТАКТЫ</span>
                     <div class="absolute inset-0 pointer-events-none opacity-0 group-hover:opacity-30 transition-opacity duration-300 z-0 btn-scanlines"></div>
                 </button>
@@ -563,6 +619,7 @@
             let drops = [];
 
             function resize() {
+                if (!canvas) return;
                 canvas.width = window.innerWidth;
                 canvas.height = window.innerHeight;
                 const columns = Math.ceil(canvas.width / fontSize);
@@ -627,6 +684,7 @@
         }
 
         function renderEffects() {
+            if (!effectsCtx || !effectsCanvas) return;
             effectsCtx.clearRect(0, 0, effectsCanvas.width, effectsCanvas.height);
             for (let i = particles.length - 1; i >= 0; i--) {
                 const p = particles[i];
@@ -635,7 +693,7 @@
                 p.life -= 0.02;
                 p.vy += 0.2; // Gravity
 
-                if (p.life <= 0) {
+                if (p.life <= 0 || p.life < 0.01) { // More reliable removal
                     particles.splice(i, 1);
                 } else {
                     effectsCtx.fillStyle = p.color;
@@ -649,15 +707,173 @@
         renderEffects();
 
         // --- 3. AUDIO & NAVIGATION ---
+        let audioContext, musicPlaying = false, musicInterval;
+
+        function initAudio() {
+            if (!audioContext) {
+                audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            }
+        }
+
+        function playSound(frequency, type = 'square', duration = 0.1, volume = 0.1) {
+            if (!audioContext) initAudio();
+            const t = audioContext.currentTime;
+            const osc = audioContext.createOscillator();
+            const gain = audioContext.createGain();
+            osc.type = type;
+            osc.frequency.setValueAtTime(frequency, t);
+            gain.gain.setValueAtTime(0, t);
+            gain.gain.linearRampToValueAtTime(volume, t + 0.01);
+            gain.gain.exponentialRampToValueAtTime(0.001, t + duration);
+            osc.connect(gain);
+            gain.connect(audioContext.destination);
+            osc.start(t);
+            osc.stop(t + duration);
+        }
+
+        function playStartSound() {
+            // Sharp start sound
+            playSound(800, 'sawtooth', 0.2, 0.2);
+            setTimeout(() => playSound(600, 'sawtooth', 0.2, 0.2), 100);
+        }
+
+        function playEatSound() {
+            // Prize sound
+            playSound(1000, 'sine', 0.1, 0.15);
+            setTimeout(() => playSound(1200, 'sine', 0.1, 0.15), 50);
+        }
+
+        function play8BitMusic() {
+            if (musicPlaying) return;
+            musicPlaying = true;
+            // More diverse melody with different patterns
+            const melody = [
+                {freq: 261.63, dur: 0.2, vol: 0.05}, // C4
+                {freq: 293.66, dur: 0.2, vol: 0.05}, // D4
+                {freq: 329.63, dur: 0.2, vol: 0.05}, // E4
+                {freq: 349.23, dur: 0.3, vol: 0.05}, // F4
+                {freq: 392.00, dur: 0.2, vol: 0.05}, // G4
+                {freq: 440.00, dur: 0.2, vol: 0.05}, // A4
+                {freq: 493.88, dur: 0.2, vol: 0.05}, // B4
+                {freq: 523.25, dur: 0.3, vol: 0.05}, // C5
+                {freq: 493.88, dur: 0.2, vol: 0.05}, // B4
+                {freq: 440.00, dur: 0.2, vol: 0.05}, // A4
+                {freq: 392.00, dur: 0.2, vol: 0.05}, // G4
+                {freq: 349.23, dur: 0.3, vol: 0.05}, // F4
+                {freq: 329.63, dur: 0.2, vol: 0.05}, // E4
+                {freq: 293.66, dur: 0.2, vol: 0.05}, // D4
+                {freq: 261.63, dur: 0.4, vol: 0.05}, // C4
+                // Variation
+                {freq: 311.13, dur: 0.2, vol: 0.05}, // Eb4
+                {freq: 369.99, dur: 0.2, vol: 0.05}, // F#4
+                {freq: 415.30, dur: 0.3, vol: 0.05}, // Ab4
+                {freq: 466.16, dur: 0.2, vol: 0.05}, // Bb4
+                {freq: 523.25, dur: 0.2, vol: 0.05}, // C5
+                {freq: 622.25, dur: 0.2, vol: 0.05}, // Eb5
+                {freq: 698.46, dur: 0.3, vol: 0.05}, // F5
+                {freq: 783.99, dur: 0.4, vol: 0.05}, // G5
+            ];
+            let noteIndex = 0;
+            musicInterval = setInterval(() => {
+                if (!musicPlaying) return;
+                const note = melody[noteIndex % melody.length];
+                playSound(note.freq, 'square', note.dur, note.vol);
+                noteIndex++;
+            }, 150);
+        }
+
+        function playVictoryMusic() {
+            // Imperial March notes (more complete and longer)
+            const victoryNotes = [
+                {freq: 392, dur: 0.3}, // G4
+                {freq: 392, dur: 0.3}, // G4
+                {freq: 392, dur: 0.3}, // G4
+                {freq: 311, dur: 0.2}, // Eb4
+                {freq: 466, dur: 0.1}, // Bb4
+                {freq: 392, dur: 0.3}, // G4
+                {freq: 311, dur: 0.2}, // Eb4
+                {freq: 466, dur: 0.1}, // Bb4
+                {freq: 392, dur: 0.6}, // G4
+                // Repeat for longer
+                {freq: 392, dur: 0.3}, // G4
+                {freq: 392, dur: 0.3}, // G4
+                {freq: 392, dur: 0.3}, // G4
+                {freq: 311, dur: 0.2}, // Eb4
+                {freq: 466, dur: 0.1}, // Bb4
+                {freq: 392, dur: 0.3}, // G4
+                {freq: 311, dur: 0.2}, // Eb4
+                {freq: 466, dur: 0.1}, // Bb4
+                {freq: 392, dur: 0.8}, // G4
+            ];
+            let noteIndex = 0;
+            const victoryInterval = setInterval(() => {
+                if (noteIndex >= victoryNotes.length) {
+                    clearInterval(victoryInterval);
+                    return;
+                }
+                const note = victoryNotes[noteIndex];
+                playSound(note.freq, 'sawtooth', note.dur, 0.1);
+                noteIndex++;
+            }, 300);
+        }
+
+        function playLoseMusic() {
+            // Ironic lose music - dissonant, low tones
+            const loseNotes = [
+                {freq: 100, dur: 0.5}, // Low G2
+                {freq: 95, dur: 0.5},  // Slightly off
+                {freq: 90, dur: 0.5},  // More off
+                {freq: 85, dur: 0.5},  // Even more
+                {freq: 80, dur: 0.8},  // Very off
+            ];
+            let noteIndex = 0;
+            const loseInterval = setInterval(() => {
+                if (noteIndex >= loseNotes.length) {
+                    clearInterval(loseInterval);
+                    return;
+                }
+                const note = loseNotes[noteIndex];
+                playSound(note.freq, 'sawtooth', note.dur, 0.15);
+                noteIndex++;
+            }, 400);
+        }
+
+        function createFireworks() {
+            for (let i = 0; i < 50; i++) {
+                setTimeout(() => {
+                    const x = Math.random() * window.innerWidth;
+                    const y = Math.random() * window.innerHeight;
+                    const colors = ['#ff0000', '#00ff00', '#0000ff', '#ffff00', '#ff00ff', '#00ffff'];
+                    createBurst(x, y, colors[Math.floor(Math.random() * colors.length)]);
+                }, i * 100);
+            }
+        }
+
+        function stopMusic() {
+            musicPlaying = false;
+            if (musicInterval) {
+                clearInterval(musicInterval);
+                musicInterval = null;
+            }
+        }
+
+        function toggleMusic() {
+            if (musicPlaying) {
+                stopMusic();
+                document.getElementById('music-btn').textContent = 'МУЗЫКА: ВЫКЛ';
+            } else {
+                play8BitMusic();
+                document.getElementById('music-btn').textContent = 'МУЗЫКА: ВКЛ';
+            }
+        }
+
         function playMechanicalClick() {
-            const AudioContext = window.AudioContext || window.webkitAudioContext;
-            if (!AudioContext) return;
-            const ctx = new AudioContext();
-            const t = ctx.currentTime;
+            if (!audioContext) initAudio();
+            const t = audioContext.currentTime;
 
             // Click
-            const osc1 = ctx.createOscillator();
-            const gain1 = ctx.createGain();
+            const osc1 = audioContext.createOscillator();
+            const gain1 = audioContext.createGain();
             osc1.type = 'triangle';
             osc1.frequency.setValueAtTime(1500, t);
             osc1.frequency.exponentialRampToValueAtTime(400, t + 0.04);
@@ -665,46 +881,59 @@
             gain1.gain.linearRampToValueAtTime(0.1, t + 0.01);
             gain1.gain.exponentialRampToValueAtTime(0.001, t + 0.05);
             osc1.connect(gain1);
-            gain1.connect(ctx.destination);
+            gain1.connect(audioContext.destination);
             osc1.start(t);
             osc1.stop(t + 0.05);
 
             // Thock
-            const osc2 = ctx.createOscillator();
-            const gain2 = ctx.createGain();
+            const osc2 = audioContext.createOscillator();
+            const gain2 = audioContext.createGain();
             osc2.type = 'square';
             osc2.frequency.setValueAtTime(200, t);
             osc2.frequency.exponentialRampToValueAtTime(50, t + 0.1);
             gain2.gain.setValueAtTime(0, t);
             gain2.gain.linearRampToValueAtTime(0.1, t + 0.01);
             gain2.gain.exponentialRampToValueAtTime(0.001, t + 0.1);
-            const filter = ctx.createBiquadFilter();
+            const filter = audioContext.createBiquadFilter();
             filter.type = 'lowpass';
             filter.frequency.setValueAtTime(1000, t);
             osc2.connect(filter);
             filter.connect(gain2);
-            gain2.connect(ctx.destination);
+            gain2.connect(audioContext.destination);
             osc2.start(t);
             osc2.stop(t + 0.1);
         }
 
-        function handleNavClick(id, colorName) {
+        function handleSnakeClick(event) {
+            const colors = {
+                'amber': '#ffb000'
+            };
+
+            // Audio
+            playMechanicalClick();
+
+            // Particles
+            if(event && event.clientX !== undefined && event.clientY !== undefined) {
+                createBurst(event.clientX, event.clientY, colors['amber']);
+            }
+
+            // Open snake game
+            openSnake();
+        }
+
+        function handleNavClick(id, colorName, event) {
             const colors = {
                 'green': '#00ff41',
                 'amber': '#ffb000',
                 'purple': '#bf00ff'
             };
-            
+
             // Audio
             playMechanicalClick();
 
             // Particles
-            // Note: In vanilla onclick, we might not get precise coordinates easily passed 
-            // without the event object, so we default to center screen if needed, 
-            // but let's grab the event from window.event
-            const e = window.event;
-            if(e) {
-                createBurst(e.clientX, e.clientY, colors[colorName]);
+            if(event && event.clientX !== undefined && event.clientY !== undefined) {
+                createBurst(event.clientX, event.clientY, colors[colorName]);
             }
 
             // Scroll
@@ -713,6 +942,185 @@
                 element.scrollIntoView({ behavior: 'smooth' });
             }
         }
+
+        // --- 4. SNAKE GAME ---
+        let snakeGame = {
+            canvas: null,
+            ctx: null,
+            snake: [{x: 10, y: 10}],
+            direction: {x: 0, y: 0},
+            food: {x: 15, y: 15},
+            score: 0,
+            gameRunning: false,
+            gameInterval: null
+        };
+
+        function openSnake() {
+            // Save current scroll position
+            window.savedScrollTop = window.pageYOffset || document.documentElement.scrollTop;
+            document.getElementById('snake-game').style.display = 'flex';
+            document.getElementById('snake-start').style.display = 'block';
+            document.getElementById('snake-gameplay').style.display = 'none';
+            document.getElementById('snake-win').style.display = 'none';
+            document.getElementById('snake-lose').style.display = 'none';
+            document.body.style.overflow = 'hidden'; // Prevent scrolling
+        }
+        function resetToStart() {
+            document.getElementById('snake-start').style.display = 'block';
+            document.getElementById('snake-gameplay').style.display = 'none';
+            document.getElementById('snake-win').style.display = 'none';
+            document.getElementById('snake-lose').style.display = 'none';
+        }
+
+        function startSnakeGame() {
+            document.getElementById('snake-start').style.display = 'none';
+            document.getElementById('snake-gameplay').style.display = 'block';
+            initSnake();
+            playStartSound();
+        }
+
+        function closeSnake() {
+            document.getElementById('snake-game').style.display = 'none';
+            if (snakeGame.gameInterval) clearInterval(snakeGame.gameInterval);
+            snakeGame.gameRunning = false;
+            stopMusic(); // Stop any playing music
+            document.body.style.overflow = ''; // Restore scrolling
+            // Restore scroll position
+            if (window.savedScrollTop !== undefined) {
+                window.scrollTo(0, window.savedScrollTop);
+            }
+        }
+
+        function initSnake() {
+            snakeGame.canvas = document.getElementById('snake-canvas');
+            snakeGame.ctx = snakeGame.canvas.getContext('2d');
+            snakeGame.snake = [{x: 10, y: 10}];
+            snakeGame.direction = {x: 0, y: 0};
+            snakeGame.food = {x: Math.floor(Math.random() * 20), y: Math.floor(Math.random() * 20)};
+            snakeGame.score = 5;
+            snakeGame.gameRunning = false;
+            updateScore();
+            drawSnake();
+        }
+
+        function drawSnake() {
+            snakeGame.ctx.fillStyle = '#000';
+            snakeGame.ctx.fillRect(0, 0, snakeGame.canvas.width, snakeGame.canvas.height);
+
+            // Draw snake
+            snakeGame.ctx.fillStyle = '#00ff41';
+            for (let segment of snakeGame.snake) {
+                snakeGame.ctx.fillRect(segment.x * 16, segment.y * 16, 16, 16);
+            }
+
+            // Draw food
+            snakeGame.ctx.fillStyle = '#ffb000';
+            snakeGame.ctx.fillRect(snakeGame.food.x * 16, snakeGame.food.y * 16, 16, 16);
+        }
+
+        function updateSnake() {
+            if (!snakeGame.gameRunning) return;
+
+            const head = {x: snakeGame.snake[0].x + snakeGame.direction.x, y: snakeGame.snake[0].y + snakeGame.direction.y};
+
+            // Wall collision
+            if (head.x < 0 || head.x >= 20 || head.y < 0 || head.y >= 20) {
+                gameOver();
+                return;
+            }
+
+            // Self collision (skip head)
+            for (let i = 1; i < snakeGame.snake.length; i++) {
+                const segment = snakeGame.snake[i];
+                if (head.x === segment.x && head.y === segment.y) {
+                    gameOver();
+                    return;
+                }
+            }
+
+            snakeGame.snake.unshift(head);
+
+            // Food collision
+            if (head.x === snakeGame.food.x && head.y === snakeGame.food.y) {
+                snakeGame.score--;
+                updateScore();
+                snakeGame.food = {x: Math.floor(Math.random() * 20), y: Math.floor(Math.random() * 20)};
+                playEatSound();
+
+                // Check win condition
+                if (snakeGame.score <= 0) {
+                    winGame();
+                    return;
+                }
+            } else {
+                snakeGame.snake.pop();
+            }
+
+            drawSnake();
+        }
+
+        function winGame() {
+            snakeGame.gameRunning = false;
+            clearInterval(snakeGame.gameInterval);
+
+            // Show win screen
+            document.getElementById('snake-gameplay').style.display = 'none';
+            document.getElementById('snake-win').style.display = 'block';
+
+            // Play victory music and fireworks
+            playVictoryMusic();
+            createFireworks();
+        }
+
+        function gameOver() {
+            snakeGame.gameRunning = false;
+            clearInterval(snakeGame.gameInterval);
+
+            // Show lose screen
+            document.getElementById('snake-gameplay').style.display = 'none';
+            document.getElementById('snake-lose').style.display = 'block';
+
+            // Play lose music
+            playLoseMusic();
+        }
+
+        function updateScore() {
+            document.getElementById('snake-score').textContent = 'Осталось: ' + snakeGame.score;
+        }
+
+        document.addEventListener('keydown', function(e) {
+            // Win/lose screen exit to main menu
+            if (document.getElementById('snake-win').style.display === 'block' ||
+                document.getElementById('snake-lose').style.display === 'block') {
+                e.preventDefault();
+                closeSnake();
+                return;
+            }
+
+            if (!snakeGame.gameRunning && document.getElementById('snake-game').style.display === 'flex') {
+                snakeGame.gameRunning = true;
+                snakeGame.gameInterval = setInterval(updateSnake, 150);
+            }
+
+            switch(e.key) {
+                case 'ArrowUp':
+                    if (snakeGame.direction.y === 0) snakeGame.direction = {x: 0, y: -1};
+                    e.preventDefault();
+                    break;
+                case 'ArrowDown':
+                    if (snakeGame.direction.y === 0) snakeGame.direction = {x: 0, y: 1};
+                    e.preventDefault();
+                    break;
+                case 'ArrowLeft':
+                    if (snakeGame.direction.x === 0) snakeGame.direction = {x: -1, y: 0};
+                    e.preventDefault();
+                    break;
+                case 'ArrowRight':
+                    if (snakeGame.direction.x === 0) snakeGame.direction = {x: 1, y: 0};
+                    e.preventDefault();
+                    break;
+            }
+        });
     </script>
 </body>
 </html>
