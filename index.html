@@ -359,6 +359,13 @@
       .idle-active .idle-blink { animation: idle-blink-fast 0.3s step-end infinite; }
       .idle-active .game-card { animation: idle-border-pulse 2s ease-in-out infinite; }
       .idle-active #matrix-canvas { animation: idle-matrix-speed 1s ease-in-out; }
+
+      /* GameBoy Pixel Art */
+      .pixelated {
+        image-rendering: pixelated;
+        image-rendering: -moz-crisp-edges;
+        image-rendering: crisp-edges;
+      }
     </style>
 <script type="importmap">
 {
@@ -393,10 +400,82 @@
         </div>
 
         <!-- GAME SCREEN -->
-        <div id="snake-gameplay" class="bg-retro-black border-2 border-retro-green p-4 shadow-[0_0_20px_rgba(0,255,65,0.5)]" style="display: none;">
+        <div id="snake-gameplay" class="bg-retro-black border-2 border-retro-green p-4 shadow-[0_0_20px_rgba(0,255,65,0.5)] max-w-md w-full mx-auto" style="display: none;">
             <h3 class="font-pixel text-retro-green text-center mb-4">ЗМЕЙКА</h3>
-            <canvas id="snake-canvas" width="320" height="320" class="block border border-retro-green/50"></canvas>
-            <div id="snake-score" class="font-terminal text-retro-green text-center mt-2">Осталось: 20</div>
+
+            <!-- GameBoy Style Container -->
+            <div class="gameboy-container bg-gray-800 border-4 border-gray-600 rounded-lg p-4 mx-auto max-w-sm shadow-2xl relative overflow-hidden">
+                <!-- GameBoy Screen -->
+                <div class="gameboy-screen bg-black border-2 border-gray-400 rounded-sm p-2 mb-4 relative">
+                    <!-- Screen Bezel -->
+                    <div class="absolute inset-0 bg-gradient-to-b from-gray-700 to-gray-800 rounded-sm pointer-events-none"></div>
+
+                    <!-- LCD Screen Effect -->
+                    <div class="relative bg-green-900 rounded-sm overflow-hidden border border-green-400 shadow-inner" style="aspect-ratio: 1;">
+                        <!-- CRT Scanlines -->
+                        <div class="absolute inset-0 opacity-30 pointer-events-none" style="background-image: linear-gradient(0deg, transparent 50%, rgba(0,255,0,0.1) 50%); background-size: 100% 2px;"></div>
+
+                        <!-- Game Canvas -->
+                        <canvas id="snake-canvas" width="320" height="320" class="block w-full h-full pixelated" style="width: 320px; height: 320px;"></canvas>
+                    </div>
+
+                    <!-- Screen Reflection -->
+                    <div class="absolute top-1 left-1 right-1 bottom-1 bg-gradient-to-br from-white/10 to-transparent rounded-sm pointer-events-none"></div>
+                </div>
+
+                <!-- GameBoy Controls -->
+                <div class="flex justify-between items-center">
+                    <!-- D-Pad -->
+                    <div class="dpad-container">
+                        <div class="dpad bg-gray-700 border-2 border-gray-500 rounded-full w-20 h-20 relative shadow-lg">
+                            <!-- D-Pad Buttons -->
+                            <button id="up-btn" class="absolute top-1 left-1/2 transform -translate-x-1/2 w-6 h-8 bg-gray-600 border border-gray-400 rounded-sm hover:bg-gray-500 active:bg-gray-800 transition-colors">
+                                <div class="w-full h-full bg-gradient-to-b from-gray-500 to-gray-700 rounded-sm flex items-center justify-center">
+                                    <div class="w-2 h-3 bg-gray-800 rounded-sm"></div>
+                                </div>
+                            </button>
+                            <button id="down-btn" class="absolute bottom-1 left-1/2 transform -translate-x-1/2 w-6 h-8 bg-gray-600 border border-gray-400 rounded-sm hover:bg-gray-500 active:bg-gray-800 transition-colors">
+                                <div class="w-full h-full bg-gradient-to-b from-gray-500 to-gray-700 rounded-sm flex items-center justify-center">
+                                    <div class="w-2 h-3 bg-gray-800 rounded-sm"></div>
+                                </div>
+                            </button>
+                            <button id="left-btn" class="absolute left-1 top-1/2 transform -translate-y-1/2 w-8 h-6 bg-gray-600 border border-gray-400 rounded-sm hover:bg-gray-500 active:bg-gray-800 transition-colors">
+                                <div class="w-full h-full bg-gradient-to-r from-gray-500 to-gray-700 rounded-sm flex items-center justify-center">
+                                    <div class="h-2 w-3 bg-gray-800 rounded-sm"></div>
+                                </div>
+                            </button>
+                            <button id="right-btn" class="absolute right-1 top-1/2 transform -translate-y-1/2 w-8 h-6 bg-gray-600 border border-gray-400 rounded-sm hover:bg-gray-500 active:bg-gray-800 transition-colors">
+                                <div class="w-full h-full bg-gradient-to-r from-gray-500 to-gray-700 rounded-sm flex items-center justify-center">
+                                    <div class="h-2 w-3 bg-gray-800 rounded-sm"></div>
+                                </div>
+                            </button>
+                            <!-- Center Circle -->
+                            <div class="absolute inset-0 flex items-center justify-center">
+                                <div class="w-6 h-6 bg-gray-800 border border-gray-600 rounded-full shadow-inner"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- AB Buttons -->
+                    <div class="flex flex-col gap-2">
+                        <button id="a-btn" class="w-10 h-10 bg-red-600 border-2 border-red-400 rounded-full shadow-lg hover:bg-red-500 active:bg-red-800 transition-colors flex items-center justify-center">
+                            <span class="font-pixel text-white text-xs">A</span>
+                        </button>
+                        <button id="b-btn" class="w-10 h-10 bg-blue-600 border-2 border-blue-400 rounded-full shadow-lg hover:bg-blue-500 active:bg-blue-800 transition-colors flex items-center justify-center">
+                            <span class="font-pixel text-white text-xs">B</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- GameBoy Branding -->
+                <div class="text-center mt-4">
+                    <div class="font-pixel text-gray-400 text-xs">NINTENDO</div>
+                    <div class="font-pixel text-gray-300 text-xs">GAME BOY</div>
+                </div>
+            </div>
+
+            <!-- Score and Controls -->
+            <div id="snake-score" class="font-terminal text-retro-green text-center mt-4">Осталось: 20</div>
             <div class="flex justify-between mt-4">
                 <button onclick="toggleMusic()" id="music-btn" class="bg-retro-amber text-black px-4 py-2 font-pixel">МУЗЫКА: ВКЛ</button>
                 <button onclick="closeSnake()" class="bg-retro-green text-black px-4 py-2 font-pixel">ВЫХОД</button>
@@ -1198,7 +1277,10 @@
             snakeGame.ctx = snakeGame.canvas.getContext('2d');
             snakeGame.snake = [{x: 10, y: 10}];
             snakeGame.direction = {x: 0, y: 0};
-            snakeGame.food = {x: Math.floor(Math.random() * 20), y: Math.floor(Math.random() * 20)};
+            // Generate food position that doesn't conflict with snake
+            do {
+                snakeGame.food = {x: Math.floor(Math.random() * 20), y: Math.floor(Math.random() * 20)};
+            } while (snakeGame.food.x === snakeGame.snake[0].x && snakeGame.food.y === snakeGame.snake[0].y);
             snakeGame.score = 5;
             snakeGame.gameRunning = false;
             updateScore();
@@ -1487,7 +1569,110 @@
         document.addEventListener('DOMContentLoaded', function() {
             initIdleDetection();
             initSpriteAnimations();
+            initVirtualControls();
         });
+
+        // Virtual controls for mobile/touch devices
+        function initVirtualControls() {
+            const upBtn = document.getElementById('up-btn');
+            const downBtn = document.getElementById('down-btn');
+            const leftBtn = document.getElementById('left-btn');
+            const rightBtn = document.getElementById('right-btn');
+            const aBtn = document.getElementById('a-btn');
+            const bBtn = document.getElementById('b-btn');
+
+            if (upBtn && downBtn && leftBtn && rightBtn && aBtn && bBtn) {
+                // Direction buttons
+                upBtn.addEventListener('touchstart', (e) => {
+                    e.preventDefault();
+                    handleVirtualDirection({x: 0, y: -1});
+                });
+                upBtn.addEventListener('mousedown', (e) => {
+                    e.preventDefault();
+                    handleVirtualDirection({x: 0, y: -1});
+                });
+
+                downBtn.addEventListener('touchstart', (e) => {
+                    e.preventDefault();
+                    handleVirtualDirection({x: 0, y: 1});
+                });
+                downBtn.addEventListener('mousedown', (e) => {
+                    e.preventDefault();
+                    handleVirtualDirection({x: 0, y: 1});
+                });
+
+                leftBtn.addEventListener('touchstart', (e) => {
+                    e.preventDefault();
+                    handleVirtualDirection({x: -1, y: 0});
+                });
+                leftBtn.addEventListener('mousedown', (e) => {
+                    e.preventDefault();
+                    handleVirtualDirection({x: -1, y: 0});
+                });
+
+                rightBtn.addEventListener('touchstart', (e) => {
+                    e.preventDefault();
+                    handleVirtualDirection({x: 1, y: 0});
+                });
+                rightBtn.addEventListener('mousedown', (e) => {
+                    e.preventDefault();
+                    handleVirtualDirection({x: 1, y: 0});
+                });
+
+                // Action buttons (A and B can be used for start/confirm)
+                aBtn.addEventListener('touchstart', (e) => {
+                    e.preventDefault();
+                    handleVirtualAction('a');
+                });
+                aBtn.addEventListener('mousedown', (e) => {
+                    e.preventDefault();
+                    handleVirtualAction('a');
+                });
+
+                bBtn.addEventListener('touchstart', (e) => {
+                    e.preventDefault();
+                    handleVirtualAction('b');
+                });
+                bBtn.addEventListener('mousedown', (e) => {
+                    e.preventDefault();
+                    handleVirtualAction('b');
+                });
+            }
+        }
+
+        function handleVirtualDirection(direction) {
+            if (!snakeGame.gameRunning && document.getElementById('snake-game').style.display === 'flex') {
+                snakeGame.gameRunning = true;
+                snakeGame.gameInterval = setInterval(updateSnake, 150);
+            }
+
+            // Prevent opposite direction
+            if ((direction.x === 1 && snakeGame.direction.x === -1) ||
+                (direction.x === -1 && snakeGame.direction.x === 1) ||
+                (direction.y === 1 && snakeGame.direction.y === -1) ||
+                (direction.y === -1 && snakeGame.direction.y === 1)) {
+                return;
+            }
+
+            snakeGame.direction = direction;
+        }
+
+        function handleVirtualAction(action) {
+            // Handle win/lose screen exit
+            if (document.getElementById('snake-win').style.display === 'block' ||
+                document.getElementById('snake-lose').style.display === 'block') {
+                closeSnake();
+                return;
+            }
+
+            // A button can start the game or be used for other actions
+            if (action === 'a' && !snakeGame.gameRunning && document.getElementById('snake-game').style.display === 'flex') {
+                snakeGame.gameRunning = true;
+                snakeGame.gameInterval = setInterval(updateSnake, 150);
+            }
+
+            // B button could be used for pause or other actions if needed
+        }
     </script>
 </body>
 </html>
