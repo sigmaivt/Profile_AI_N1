@@ -3,7 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Retro_Zone | Кибер--Клуб</title>
+    <title>Retro_Zone | Кибер--Клуб | LAN Турниры по Ретро Играм</title>
+    <meta name="description" content="RETRO_ZONE - центр ностальгии. LAN турниры по классическим играм: CS 1.6, Warcraft III, Quake III, StarCraft, Diablo II, Half-Life, DOTA. Ретро оборудование, чистый скилл, без лагов и DLC.">
+    <meta name="keywords" content="кибер-клуб, LAN турниры, ретро игры, CS 1.6, Warcraft III, Quake III, StarCraft, Diablo II, Half-Life, DOTA, ретроклуб, гейминг">
+    <meta name="author" content="RETRO_ZONE">
+    <meta name="robots" content="index, follow">
+    <meta property="og:title" content="Retro_Zone | Кибер--Клуб | LAN Турниры по Ретро Играм">
+    <meta property="og:description" content="RETRO_ZONE - центр ностальгии. LAN турниры по классическим играм. Ретро оборудование, чистый скилл, без лагов и DLC.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://retro-zone.club">
+    <meta property="og:image" content="https://retro-zone.club/preview.jpg">
+    <link rel="canonical" href="https://retro-zone.club">
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -26,6 +36,7 @@
             fontFamily: {
               'pixel': ['"Press Start 2P"', 'cursive'],
               'terminal': ['"VT323"', 'monospace'],
+              'mono-large': ['monospace'],
             },
             animation: {
               'blink': 'blink 1s step-end infinite',
@@ -36,7 +47,7 @@
     </script>
 
     <style>
-      /* --- GLOBAL STYLES --- */
+/* --- GLOBAL STYLES - MODIFIED --- */
       body {
         background-color: #000;
         overflow-x: hidden;
@@ -347,10 +358,8 @@
       @keyframes idle-border-pulse {
         0% { box-shadow: 0 0 5px rgba(0, 255, 65, 0.3); }
         50% { box-shadow: 0 0 15px rgba(0, 255, 65, 0.6), 0 0 25px rgba(0, 255, 65, 0.4); }
-        100% { box-shadow: 0 0 5px rgba(0, 255, 65, 0.3); }
-      }
 
-      @keyframes idle-matrix-speed {
+  100% { box-shadow: 0 0 5px rgba(0, 255, 65, 0.3); }
         0% { animation-duration: 33ms; }
         100% { animation-duration: 16ms; }
       }
@@ -366,6 +375,153 @@
         image-rendering: -moz-crisp-edges;
         image-rendering: crisp-edges;
       }
+
+      /* --- MONITOR EFFECTS --- */
+      /* Flicker effect */
+      @keyframes flicker {
+        0%, 100% { opacity: 1; }
+        50% { opacity: 0.98; }
+        51% { opacity: 0.95; }
+        52% { opacity: 0.92; }
+        53% { opacity: 0.95; }
+        54% { opacity: 0.98; }
+      }
+
+      /* Distortion effect */
+      @keyframes distort {
+        0% { transform: perspective(1000px) rotateX(0deg) rotateY(0deg); }
+        25% { transform: perspective(1000px) rotateX(0.5deg) rotateY(0.5deg); }
+        50% { transform: perspective(1000px) rotateX(-0.5deg) rotateY(-0.5deg); }
+        75% { transform: perspective(1000px) rotateX(0.3deg) rotateY(-0.3deg); }
+        100% { transform: perspective(1000px) rotateX(0deg) rotateY(0deg); }
+      }
+
+      /* Degauss effect */
+      @keyframes degauss {
+        0% {
+          transform: scale(1) rotate(0deg);
+          filter: hue-rotate(0deg) brightness(1);
+        }
+        10% {
+          transform: scale(1.05) rotate(5deg);
+          filter: hue-rotate(90deg) brightness(1.2);
+        }
+        20% {
+          transform: scale(1.1) rotate(-5deg);
+          filter: hue-rotate(180deg) brightness(1.4);
+        }
+        30% {
+          transform: scale(0.95) rotate(3deg);
+          filter: hue-rotate(270deg) brightness(0.8);
+        }
+        40% {
+          transform: scale(1.02) rotate(-3deg);
+          filter: hue-rotate(360deg) brightness(1.1);
+        }
+        50% {
+          transform: scale(1) rotate(0deg);
+          filter: hue-rotate(0deg) brightness(1);
+        }
+        100% {
+          transform: scale(1) rotate(0deg);
+          filter: hue-rotate(0deg) brightness(1);
+        }
+      }
+
+      .monitor-flicker {
+        animation: flicker 0.1s infinite;
+      }
+
+      .monitor-distort {
+        animation: distort 0.3s ease-in-out infinite;
+      }
+
+      .monitor-degauss {
+        animation: degauss 2s ease-in-out;
+      }
+
+      /* --- CRT IMPLODE EFFECT --- */
+      @keyframes crt-implode {
+        0% {
+          transform: scale(1) rotate(0deg);
+          clip-path: inset(0 0 0 0);
+          opacity: 1;
+        }
+        10% {
+          transform: scale(1.05) rotate(2deg);
+          clip-path: inset(2% 2% 2% 2%);
+          opacity: 0.95;
+        }
+        20% {
+          transform: scale(1.1) rotate(-2deg);
+          clip-path: inset(5% 5% 5% 5%);
+          opacity: 0.9;
+        }
+        30% {
+          transform: scale(1.15) rotate(1deg);
+          clip-path: inset(10% 10% 10% 10%);
+          opacity: 0.8;
+        }
+        40% {
+          transform: scale(1.2) rotate(-1deg);
+          clip-path: inset(15% 15% 15% 15%);
+          opacity: 0.7;
+        }
+        50% {
+          transform: scale(1.3) rotate(0.5deg);
+          clip-path: inset(25% 25% 25% 25%);
+          opacity: 0.5;
+        }
+        60% {
+          transform: scale(1.4) rotate(0deg);
+          clip-path: inset(35% 35% 35% 35%);
+          opacity: 0.3;
+        }
+        70% {
+          transform: scale(1.6) rotate(0deg);
+          clip-path: inset(45% 45% 45% 45%);
+          opacity: 0.2;
+        }
+        80% {
+          transform: scale(1.8) rotate(0deg);
+          clip-path: inset(48% 48% 48% 48%);
+          opacity: 0.1;
+        }
+        90% {
+          transform: scale(2.0) rotate(0deg);
+          clip-path: inset(49% 49% 49% 49%);
+          opacity: 0.05;
+        }
+        100% {
+          transform: scale(2.5) rotate(0deg);
+          clip-path: inset(50% 50% 50% 50%);
+          opacity: 0;
+        }
+      }
+
+      .crt-implode {
+        animation: crt-implode 1.5s ease-in-out forwards;
+      }
+
+      /* --- TYPEWRITER EFFECT --- */
+      @keyframes typewriter {
+        from { width: 0; }
+        to { width: 100%; }
+      }
+
+      @keyframes blink-caret {
+        from, to { border-color: transparent; }
+        50% { border-color: #00ff41; }
+      }
+
+      .typewriter {
+        overflow: hidden;
+        border-right: 3px solid #00ff41;
+        white-space: nowrap;
+        animation:
+          typewriter 2s steps(40, end),
+          blink-caret 0.75s step-end infinite;
+      }
     </style>
 <script type="importmap">
 {
@@ -375,14 +531,352 @@
     "react/": "https://aistudiocdn.com/react@^19.2.1/"
   }
 }
-</script>
+    </script>
+
+    <!-- MATRIX PRELOADER -->
+    <div id="matrix-preloader" class="fixed inset-0 bg-black z-[101]">
+        <div id="matrix-wait-screen" class="absolute top-4 left-4">
+            <div class="font-terminal text-retro-green text-lg">
+                <span id="press-any-key">Press any key</span>
+            </div>
+        </div>
+        <div id="matrix-terminal-screen" class="absolute top-4 left-4 hidden">
+            <div class="font-terminal text-retro-green text-lg">
+                <div id="matrix-terminal" class="flex flex-col">
+                    <div id="matrix-line-1" class="text-retro-green">
+                        <span id="matrix-prompt-1" class="text-retro-green">$ </span>
+                        <span id="matrix-text-1" class="text-retro-green"></span>
+                    </div>
+                    <div id="matrix-line-2" class="text-retro-green mt-4 hidden">
+                        <span id="matrix-prompt-2" class="text-retro-green">$ </span>
+                        <span id="matrix-text-2" class="text-retro-green"></span>
+                    </div>
+                    <div id="matrix-line-3" class="text-retro-green mt-4 hidden">
+                        <span id="matrix-prompt-3" class="text-retro-green">$ </span>
+                        <span id="matrix-text-3" class="text-retro-green"></span>
+                    </div>
+                    <div id="matrix-line-4" class="text-retro-green mt-4 hidden">
+                        <span id="matrix-prompt-4" class="text-retro-green">$ </span>
+                        <span id="matrix-text-4" class="text-retro-green"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- PRELOADER -->
+    <div id="preloader" class="fixed inset-0 bg-black z-[100] flex items-center justify-center" style="display: none;">
+        <div class="text-center">
+            <div class="mb-8">
+                <pre class="font-pixel text-retro-green text-2xl md:text-4xl leading-none">
+██████╗ ███████╗████████╗██████╗  ██████╗
+██╔══██╗██╔════╝╚══██╔══╝██╔══██╗██╔═══██╗
+██████╔╝█████╗     ██║   ██████╔╝██║   ██║
+██╔══██╗██╔══╝     ██║   ██╔══██╗██║   ██║
+██║  ██║███████╗   ██║   ██║  ██║╚██████╔╝
+╚═╝  ╚═╝╚══════╝   ╚═╝   ╚═╝  ╚═╝ ╚═════╝
+
+                 ███████╗███████╗███╗   ██╗███████╗
+                 ██╔════╝██╔════╝████╗  ██║██╔════╝
+                 ███████╗█████╗  ██╔██╗ ██║███████╗
+                 ╚════██║██╔══╝  ██║╚██╗██║╚════██║
+                 ███████║███████╗██║ ╚████║███████║
+                 ╚══════╝╚══════╝╚═╝  ╚═══╝╚══════╝
+                </pre>
+            </div>
+
+            <div class="font-terminal text-retro-green text-lg md:text-xl mb-6">
+                <div id="bios-text" class="animate-pulse">Загрузка BIOS...</div>
+                <div id="memory-text" class="mt-2 text-retro-amber" style="display: none;">Проверка оперативной памяти...</div>
+                <div id="system-text" class="mt-2 text-retro-purple" style="display: none;">Инициализация системы...</div>
+            </div>
+
+            <div class="w-64 md:w-96 h-4 bg-gray-800 border border-retro-green mb-4">
+                <div id="progress-bar" class="h-full bg-retro-green transition-all duration-300" style="width: 0%"></div>
+            </div>
+
+            <div class="font-terminal text-retro-green text-sm animate-pulse">
+                RETRO_ZONE OS v1.0.0 | © 2024
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // --- MATRIX PRELOADER LOGIC ---
+        function initMatrixPreloader() {
+            const matrixPreloader = document.getElementById('matrix-preloader');
+            const waitScreen = document.getElementById('matrix-wait-screen');
+            const terminalScreen = document.getElementById('matrix-terminal-screen');
+
+            const matrixDialog = [
+                "Проснись, Нео ...",
+                "Ты готов увидеть реальный мир?",
+                "Следуй за белым кроликом",
+                "Тук тук"
+            ];
+
+            let currentLine = 0;
+            let currentChar = 0;
+
+            function playTypingSound() {
+                if (!audioContext) initAudio();
+                const t = audioContext.currentTime;
+
+                // Create a realistic mechanical keyboard sound
+                // Main click sound - high frequency metallic ping
+                const osc1 = audioContext.createOscillator();
+                const gain1 = audioContext.createGain();
+                osc1.type = 'triangle';
+                osc1.frequency.setValueAtTime(1800, t);
+                osc1.frequency.exponentialRampToValueAtTime(600, t + 0.02);
+                gain1.gain.setValueAtTime(0, t);
+                gain1.gain.linearRampToValueAtTime(0.08, t + 0.001);
+                gain1.gain.exponentialRampToValueAtTime(0.001, t + 0.02);
+
+                // Low frequency thump
+                const osc2 = audioContext.createOscillator();
+                const gain2 = audioContext.createGain();
+                osc2.type = 'sine';
+                osc2.frequency.setValueAtTime(120, t);
+                osc2.frequency.exponentialRampToValueAtTime(80, t + 0.03);
+                gain2.gain.setValueAtTime(0, t);
+                gain2.gain.linearRampToValueAtTime(0.05, t + 0.001);
+                gain2.gain.exponentialRampToValueAtTime(0.001, t + 0.03);
+
+                // High frequency sizzle
+                const osc3 = audioContext.createOscillator();
+                const gain3 = audioContext.createGain();
+                osc3.type = 'square';
+                osc3.frequency.setValueAtTime(3200, t);
+                osc3.frequency.exponentialRampToValueAtTime(2400, t + 0.01);
+                gain3.gain.setValueAtTime(0, t);
+                gain3.gain.linearRampToValueAtTime(0.03, t + 0.001);
+                gain3.gain.exponentialRampToValueAtTime(0.001, t + 0.01);
+
+                osc1.connect(gain1);
+                gain1.connect(audioContext.destination);
+                osc2.connect(gain2);
+                gain2.connect(audioContext.destination);
+                osc3.connect(gain3);
+                gain3.connect(audioContext.destination);
+
+                osc1.start(t);
+                osc1.stop(t + 0.02);
+                osc2.start(t);
+                osc2.stop(t + 0.03);
+                osc3.start(t);
+                osc3.stop(t + 0.01);
+            }
+
+            function playKnockingSound() {
+                if (!audioContext) initAudio();
+
+                // Create realistic door knocking sounds
+                const knocks = [0, 200, 400];
+                knocks.forEach((delay, index) => {
+                    setTimeout(() => {
+                        const t = audioContext.currentTime;
+
+                        // Main impact sound - wooden thump
+                        const osc1 = audioContext.createOscillator();
+                        const gain1 = audioContext.createGain();
+                        osc1.type = 'sawtooth';
+                        osc1.frequency.setValueAtTime(80 + index * 20, t);
+                        osc1.frequency.exponentialRampToValueAtTime(60, t + 0.15);
+                        gain1.gain.setValueAtTime(0, t);
+                        gain1.gain.linearRampToValueAtTime(0.15 + index * 0.1, t + 0.005);
+                        gain1.gain.exponentialRampToValueAtTime(0.001, t + 0.15);
+
+                        // Resonance - wooden echo
+                        const osc2 = audioContext.createOscillator();
+                        const gain2 = audioContext.createGain();
+                        osc2.type = 'sine';
+                        osc2.frequency.setValueAtTime(120 + index * 30, t);
+                        osc2.frequency.exponentialRampToValueAtTime(90, t + 0.3);
+                        gain2.gain.setValueAtTime(0, t + 0.01);
+                        gain2.gain.linearRampToValueAtTime(0.08, t + 0.01);
+                        gain2.gain.exponentialRampToValueAtTime(0.001, t + 0.3);
+
+                        // High frequency click
+                        const osc3 = audioContext.createOscillator();
+                        const gain3 = audioContext.createGain();
+                        osc3.type = 'triangle';
+                        osc3.frequency.setValueAtTime(800, t);
+                        osc3.frequency.exponentialRampToValueAtTime(400, t + 0.05);
+                        gain3.gain.setValueAtTime(0, t);
+                        gain3.gain.linearRampToValueAtTime(0.06, t + 0.001);
+                        gain3.gain.exponentialRampToValueAtTime(0.001, t + 0.05);
+
+                        // Apply low-pass filter for wood-like sound
+                        const filter1 = audioContext.createBiquadFilter();
+                        filter1.type = 'lowpass';
+                        filter1.frequency.setValueAtTime(600, t);
+                        filter1.Q.setValueAtTime(2, t);
+
+                        const filter2 = audioContext.createBiquadFilter();
+                        filter2.type = 'lowpass';
+                        filter2.frequency.setValueAtTime(800, t);
+                        filter2.Q.setValueAtTime(1.5, t);
+
+                        osc1.connect(filter1);
+                        filter1.connect(gain1);
+                        gain1.connect(audioContext.destination);
+
+                        osc2.connect(filter2);
+                        filter2.connect(gain2);
+                        gain2.connect(audioContext.destination);
+
+                        osc3.connect(gain3);
+                        gain3.connect(audioContext.destination);
+
+                        osc1.start(t);
+                        osc1.stop(t + 0.15);
+                        osc2.start(t);
+                        osc2.stop(t + 0.3);
+                        osc3.start(t);
+                        osc3.stop(t + 0.05);
+                    }, delay);
+                });
+            }
+
+            function typeWriter() {
+                if (currentLine < matrixDialog.length) {
+                    const line = matrixDialog[currentLine];
+                    const textElement = document.getElementById(`matrix-text-${currentLine + 1}`);
+
+                    if (currentChar < line.length) {
+                        // Play typing sound for each character
+                        playTypingSound();
+                        textElement.textContent += line.charAt(currentChar);
+                        currentChar++;
+                        setTimeout(typeWriter, 120);
+                    } else {
+                        // Line completed
+                        currentLine++;
+                        currentChar = 0;
+
+                        if (currentLine < matrixDialog.length) {
+                            // Show next line
+                            const nextLineElement = document.getElementById(`matrix-line-${currentLine + 1}`);
+                            nextLineElement.style.display = 'block';
+                            setTimeout(typeWriter, 1500); // Pause between lines
+                        } else {
+                            // Last line completed - play knocking sound after "Тук тук"
+                            setTimeout(() => {
+                                playKnockingSound();
+                                // Start CRT implode effect after knocking
+                                setTimeout(() => {
+                                    matrixPreloader.classList.add('crt-implode');
+                                    setTimeout(() => {
+                                        matrixPreloader.style.display = 'none';
+                                        // Start BIOS preloader
+                                        initBIOSPreloader();
+                                    }, 1500); // Wait for implode animation
+                                }, 1000);
+                            }, 500);
+                        }
+                    }
+                }
+            }
+
+            // Wait for user interaction
+            function startMatrixSequence() {
+                // Hide wait screen and show terminal
+                waitScreen.style.display = 'none';
+                terminalScreen.style.display = 'block';
+
+                // Start typing after a brief pause
+                setTimeout(typeWriter, 1000);
+            }
+
+            // Add event listeners for user interaction
+            function handleUserInteraction() {
+                document.removeEventListener('keydown', handleUserInteraction);
+                document.removeEventListener('click', handleUserInteraction);
+                startMatrixSequence();
+            }
+
+            document.addEventListener('keydown', handleUserInteraction);
+            document.addEventListener('click', handleUserInteraction);
+        }
+
+        // --- BIOS PRELOADER LOGIC ---
+        function initBIOSPreloader() {
+            const preloader = document.getElementById('preloader');
+            const progressBar = document.getElementById('progress-bar');
+            const biosText = document.getElementById('bios-text');
+            const memoryText = document.getElementById('memory-text');
+            const systemText = document.getElementById('system-text');
+
+            // Show BIOS preloader
+            preloader.style.display = 'flex';
+
+            let progress = 0;
+            let stage = 0;
+
+            const stages = [
+                { text: "Загрузка BIOS...", element: biosText, duration: 1500 },
+                { text: "Проверка оперативной памяти...", element: memoryText, duration: 2000 },
+                { text: "Инициализация системы...", element: systemText, duration: 1500 }
+            ];
+
+            function updateProgress() {
+                if (progress >= 100) {
+                    // Hide preloader and show content
+                    preloader.style.opacity = '0';
+                    setTimeout(() => {
+                        preloader.style.display = 'none';
+                    }, 500);
+                    return;
+                }
+
+                progress += Math.random() * 12 + 8; // Smoother progress increment
+                if (progress > 100) progress = 100;
+
+                progressBar.style.width = progress + '%';
+
+                // Update stages
+                if (stage < stages.length && progress >= (stage + 1) * (100 / stages.length)) {
+                    if (stage > 0) stages[stage - 1].element.style.display = 'none';
+                    stages[stage].element.style.display = 'block';
+                    stage++;
+                }
+
+                setTimeout(updateProgress, Math.random() * 150 + 100);
+            }
+
+            updateProgress();
+        }
+
+        // Initialize audio context first (needs user interaction in some browsers)
+        let audioInitialized = false;
+
+        function initializeAudioOnInteraction() {
+            if (!audioInitialized) {
+                initAudio();
+                audioInitialized = true;
+                document.removeEventListener('click', initializeAudioOnInteraction);
+                document.removeEventListener('keydown', initializeAudioOnInteraction);
+                document.removeEventListener('touchstart', initializeAudioOnInteraction);
+                console.log('Audio context initialized');
+            }
+        }
+
+        // Add event listeners to initialize audio on first user interaction
+        document.addEventListener('click', initializeAudioOnInteraction);
+        document.addEventListener('keydown', initializeAudioOnInteraction);
+        document.addEventListener('touchstart', initializeAudioOnInteraction);
+
+        // Initialize Matrix preloader immediately - it will play sounds only after audio is initialized
+        initMatrixPreloader();
+    </script>
 </head>
 <body class="selection:bg-retro-green selection:text-black">
 
     <!-- CANVAS LAYERS -->
     <canvas id="matrix-canvas" class="fixed top-0 left-0 w-full h-full z-0 pointer-events-none"></canvas>
     
-    <div id="crt-overlay" class="fixed inset-0 pointer-events-none z-50 overflow-hidden w-full h-full">
+    <div id="crt-overlay" class="fixed inset-0 pointer-events-none z-50 overflow-hidden w-full h-full monitor-flicker monitor-distort">
         <div class="absolute inset-0 scanlines opacity-30"></div>
         <div class="absolute inset-0 vignette"></div>
         <div class="absolute inset-0 bg-retro-green mix-blend-overlay opacity-[0.03]"></div>
@@ -569,13 +1063,7 @@
                   <span class="text-retro-purple">БЕЗ ЛАГОВ. БЕЗ DLC. ТОЛЬКО ИГРА.</span>
                 </div>
         
-                <div class="mt-16 text-left border-t border-retro-green/30 pt-4 opacity-70">
-                   <p class="font-terminal text-sm text-retro-green animate-[pulse_3s_ease-in-out_infinite]">
-                     <span class="text-white">root@matrix:~$</span> Проснись, Нео...
-                     <br/>
-                     <span class="text-white">root@matrix:~$</span> Следуй за белым кроликом. <span class="inline-block animate-bounce">🐇</span>
-                   </p>
-                </div>
+
             </div>
         </section>
 
@@ -608,7 +1096,7 @@
                       <div class="absolute bottom-2 right-2 bg-black/80 px-2 py-1 border border-retro-green/50 z-40"><span class="text-retro-green font-pixel text-[10px]">2000</span></div>
                     </div>
                     <div class="p-2 flex-grow flex flex-col justify-between relative z-10">
-                      <h3 class="font-pixel text-retro-green text-sm leading-tight mb-2 group-hover:text-retro-amber transition-colors">CS 1.6</h3>
+
                       <div class="flex justify-between items-end border-t border-retro-green/30 pt-2"><span class="font-terminal text-retro-amber text-lg">FPS</span><span class="font-terminal text-gray-500 text-sm group-hover:text-white transition-colors animate-pulse idle-blink">READY</span></div>
                     </div>
                   </div>
@@ -816,13 +1304,21 @@
                </li>
             </ul>
   
-            <!-- Terminal Input -->
-            <div class="bg-black p-4 border border-gray-700 font-mono text-retro-green hidden md:block shadow-inner min-h-[120px]">
-              <div class="flex flex-col gap-1">
-                <p>server@retro_zone:~$ ping user</p>
-                <p class="text-gray-400">64 bytes from 127.0.0.1: icmp_seq=1 ttl=64 time=0.045 ms</p>
-                <p class="flex items-center"><span>server@retro_zone:~$</span><span class="animate-blink inline-block w-3 h-5 bg-retro-green ml-1"></span></p>
+            <!-- Interactive Terminal -->
+            <div class="bg-black p-4 border border-gray-700 font-terminal text-retro-green hidden md:block shadow-inner min-h-[120px]">
+              <div id="terminal-output" class="flex flex-col gap-1 mb-2 min-h-[80px]">
+                <p>server@retro_zone:~$ Добро пожаловать в систему!</p>
+                <p>server@retro_zone:~$ Введите 'help' для списка команд</p>
+                <p class="flex items-center"><span id="terminal-prompt">server@retro_zone:~$</span><span class="animate-blink inline-block w-3 h-5 bg-retro-green ml-1"></span></p>
               </div>
+              <input
+                id="terminal-input"
+                type="text"
+                class="w-full bg-transparent border-none outline-none text-retro-green font-terminal text-sm"
+                placeholder="Введите команду..."
+                onkeydown="handleTerminalInput(event)"
+                autocomplete="off"
+              >
             </div>
           </div>
   
@@ -889,15 +1385,17 @@
         (function() {
             const canvas = document.getElementById('matrix-canvas');
             const ctx = canvas.getContext('2d');
-            
+
             const katakana = 'ｱｲｳｴｵｶｷｸｹｺｻｼｽｾｿﾀﾁﾂﾃﾄﾅﾆﾇﾈﾉﾊﾋﾌﾍﾎﾏﾐﾑﾒﾓﾔﾕﾖﾗﾘﾙﾚﾛﾜﾝ';
             const latin = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
             const nums = '0123456789';
             const symbols = '$+-*/=%"\'#&_(),.;:?!\\|{}<>[]^~';
             const chars = katakana + latin + nums + symbols;
-            
+
             const fontSize = 16;
             let drops = [];
+            let animationId = null;
+            let isVisible = !document.hidden;
 
             function resize() {
                 if (!canvas) return;
@@ -908,6 +1406,8 @@
             }
 
             function draw() {
+                if (!isVisible) return;
+
                 ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
                 ctx.fillRect(0, 0, canvas.width, canvas.height);
                 ctx.font = `${fontSize}px "VT323", monospace`;
@@ -929,11 +1429,21 @@
                     }
                     drops[i]++;
                 }
+
+                animationId = requestAnimationFrame(draw);
             }
 
+            function handleVisibilityChange() {
+                isVisible = !document.hidden;
+                if (isVisible && !animationId) {
+                    draw(); // Restart animation
+                }
+            }
+
+            document.addEventListener('visibilitychange', handleVisibilityChange);
             window.addEventListener('resize', resize);
             resize();
-            setInterval(draw, 33);
+            draw(); // Start initial animation
         })();
 
         // --- 2. PARTICLE EFFECTS ---
@@ -1442,6 +1952,18 @@
             resetIdleTimer();
         }
 
+        // Game screenshots data - local screenshots for each game
+        const gameScreenshots = {
+            0: 'screenshots/cs16.jpg', // CS 1.6
+            1: 'screenshots/warcraft3.jpg', // Warcraft III
+            2: 'screenshots/quake3.jpg', // Quake III
+            3: 'screenshots/starcraft.jpg', // StarCraft
+            4: 'screenshots/diablo2.jpg', // Diablo II
+            5: 'screenshots/halflife.jpg', // Half-Life
+            6: 'screenshots/dota.jpg', // DOTA
+            7: 'screenshots/ut2004.jpg' // UT 2004
+        };
+
         // Sprite animations for game cards
         function initSpriteAnimations() {
             console.log('Initializing sprite animations...');
@@ -1454,6 +1976,26 @@
                 if (!artContainer) {
                     console.log('No .aspect-square found for card', index);
                     return;
+                }
+
+                // Add screenshot hover effect
+                if (gameScreenshots[index]) {
+                    const screenshotOverlay = document.createElement('div');
+                    screenshotOverlay.className = 'absolute inset-0 pointer-events-none z-40 opacity-0 transition-opacity duration-500 flex items-center justify-center bg-black/90';
+                    screenshotOverlay.innerHTML = `<img src="${gameScreenshots[index]}" alt="Game Screenshot" class="max-w-full max-h-full object-contain" style="filter: contrast(1.2) brightness(0.8) saturate(0.5) grayscale(0.3);">`;
+                    artContainer.appendChild(screenshotOverlay);
+
+                    // Add hover effect using CSS classes instead of direct event listeners
+                    card.addEventListener('mouseenter', () => {
+                        screenshotOverlay.style.opacity = '1';
+                        console.log('Hover activated for game', index, 'overlay:', screenshotOverlay);
+                    });
+                    card.addEventListener('mouseleave', () => {
+                        screenshotOverlay.style.opacity = '0';
+                        console.log('Hover deactivated for game', index);
+                    });
+
+                    console.log('Screenshot overlay added for game', index, 'overlay:', screenshotOverlay);
                 }
 
                 console.log('Processing card', index, 'with art container');
@@ -1575,11 +2117,32 @@
             console.log('Sprite animations initialization complete');
         }
 
+        // --- MONITOR EFFECTS ---
+        function initMonitorEffects() {
+            // Start with degauss effect on load
+            const crtOverlay = document.getElementById('crt-overlay');
+            if (crtOverlay) {
+                // Add degauss class initially
+                crtOverlay.classList.add('monitor-degauss');
+
+                // Remove degauss class after animation completes
+                setTimeout(() => {
+                    crtOverlay.classList.remove('monitor-degauss');
+                    // Add permanent flicker and distortion
+                    crtOverlay.classList.add('monitor-flicker', 'monitor-distort');
+                }, 2000);
+            }
+        }
+
         // Initialize everything when DOM is loaded
         document.addEventListener('DOMContentLoaded', function() {
             initIdleDetection();
-            initSpriteAnimations();
-            initVirtualControls();
+            // Add small delay to ensure all elements are rendered
+            setTimeout(() => {
+                initSpriteAnimations();
+                initVirtualControls();
+                initMonitorEffects();
+            }, 100);
         });
 
         // Virtual controls for mobile/touch devices
@@ -1725,6 +2288,91 @@
             // B button could be used for pause or other actions if needed
             if (action === 'b') {
                 console.log('B button pressed');
+            }
+        }
+
+        // --- TERMINAL INTERACTION ---
+        function handleTerminalInput(event) {
+            if (event.key === 'Enter') {
+                const input = document.getElementById('terminal-input');
+                const command = input.value.trim().toLowerCase();
+                const output = document.getElementById('terminal-output');
+                const prompt = document.getElementById('terminal-prompt');
+
+                // Add command to output
+                const commandLine = document.createElement('p');
+                commandLine.textContent = `server@retro_zone:~$ ${input.value}`;
+                output.appendChild(commandLine);
+
+                // Process command
+                switch(command) {
+                    case 'help':
+                        const helpText = document.createElement('p');
+                        helpText.innerHTML = `
+Доступные команды:<br/>
+&nbsp;&nbsp;help&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- показать эту справку<br/>
+&nbsp;&nbsp;secret&nbsp;&nbsp;&nbsp;- получить скрытую скидку<br/>
+&nbsp;&nbsp;clear&nbsp;&nbsp;&nbsp;&nbsp;- очистить терминал<br/>
+&nbsp;&nbsp;about&nbsp;&nbsp;&nbsp;&nbsp;- информация о клубе
+                        `;
+                        output.appendChild(helpText);
+                        break;
+
+                    case 'secret':
+                        const secretText = document.createElement('p');
+                        secretText.innerHTML = `
+<span style="color: #ffb000;">🔓 ДОСТУП РАЗБЛОКИРОВАН!</span><br/>
+<span style="color: #00ff41;">ПРОМОКОД: RETRO_MASTER</span><br/>
+<span style="color: #bf00ff;">СКИДКА 25% НА ВСЕ УСЛУГИ</span><br/>
+<span style="color: #888;">Используйте код при бронировании</span>
+                        `;
+                        output.appendChild(secretText);
+
+                        // Create particles for secret unlock
+                        createBurst(window.innerWidth / 2, window.innerHeight / 2, '#ffb000');
+                        playSound(1000, 'sine', 0.3, 0.2);
+                        break;
+
+                    case 'clear':
+                        // Keep only the welcome messages and prompt
+                        while (output.children.length > 3) {
+                            output.removeChild(output.children[1]);
+                        }
+                        break;
+
+                    case 'about':
+                        const aboutText = document.createElement('p');
+                        aboutText.innerHTML = `
+<span style="color: #00ff41;">RETRO_ZONE КИБЕР-КЛУБ</span><br/>
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━<br/>
+• LAN турниры по классическим играм<br/>
+• Ретро оборудование и консоли<br/>
+• Чистый скилл, без лагов и DLC<br/>
+• Комьюнити настоящих геймеров<br/>
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+                        `;
+                        output.appendChild(aboutText);
+                        break;
+
+                    case '':
+                        // Empty command, do nothing
+                        break;
+
+                    default:
+                        const errorText = document.createElement('p');
+                        errorText.innerHTML = `<span style="color: #ff0000;">Команда '${command}' не найдена. Введите 'help' для списка команд.</span>`;
+                        output.appendChild(errorText);
+                        break;
+                }
+
+                // Clear input
+                input.value = '';
+
+                // Scroll to bottom
+                output.scrollTop = output.scrollHeight;
+
+                // Update prompt (for consistency)
+                prompt.textContent = 'server@retro_zone:~$';
             }
         }
     </script>
