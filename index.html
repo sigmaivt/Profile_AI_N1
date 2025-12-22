@@ -566,7 +566,48 @@
 
     <!-- PRELOADER -->
     <div id="preloader" class="fixed inset-0 bg-black z-[100] flex items-center justify-center" style="display: none;">
-        <div class="text-center">
+        <!-- BIOS LOADING SCREEN -->
+        <div id="bios-loading" class="text-center relative">
+            <!-- White Rabbit Tattoo Graphic -->
+            <div class="absolute left-8 top-1/2 transform -translate-y-1/2 pointer-events-none">
+                <svg width="180" height="180" viewBox="0 0 150 150" class="text-white drop-shadow-lg" fill="currentColor" style="filter: drop-shadow(0 0 8px rgba(255,255,255,0.6)); opacity: 0.7;">
+                    <!-- Detailed Rabbit Silhouette - Matrix Trinity Tattoo Style -->
+                    <!-- Left Ear -->
+                    <path d="M45 25c-2-1-4-2-5-4-2-4-1-9 2-12 1-1 3-2 4-2 2 0 4 1 5 3 3 4 3 9 0 13-1 2-3 3-6 2z"/>
+                    <!-- Right Ear -->
+                    <path d="M105 25c2-1 4-2 5-4 2-4 1-9-2-12-1-1-3-2-4-2-2 0-4 1-5 3-3 4-3 9 0 13 1 2 3 3 6 2z"/>
+                    <!-- Head -->
+                    <path d="M75 35c-8 0-15 3-21 9-12 12-12 31 0 43 3 3 6 5 9 6 3 1 6-1 9-4 12-12 12-31 0-43-6-6-13-11-21-11z"/>
+                    <!-- Left Eye -->
+                    <ellipse cx="65" cy="55" rx="4" ry="6"/>
+                    <!-- Right Eye -->
+                    <ellipse cx="85" cy="55" rx="4" ry="6"/>
+                    <!-- Nose -->
+                    <ellipse cx="75" cy="70" rx="2" ry="3"/>
+                    <!-- Mouth/Whiskers area -->
+                    <path d="M75 75c-3 0-6 1-8 3-4 4-4 10 0 14 1 1 3 2 4 2 2 0 3-1 4-2 4-4 4-10 0-14-2-2-5-3-8-3z"/>
+                    <!-- Body -->
+                    <ellipse cx="75" cy="105" rx="18" ry="25"/>
+                    <!-- Left Paw -->
+                    <ellipse cx="60" cy="120" rx="6" ry="8"/>
+                    <!-- Right Paw -->
+                    <ellipse cx="90" cy="120" rx="6" ry="8"/>
+                    <!-- Tail -->
+                    <circle cx="75" cy="135" r="5"/>
+                    <!-- Left Whisker Lines -->
+                    <path d="M55 68l-8-2" stroke="currentColor" stroke-width="1" fill="none"/>
+                    <path d="M55 72l-8 0" stroke="currentColor" stroke-width="1" fill="none"/>
+                    <path d="M55 76l-8 2" stroke="currentColor" stroke-width="1" fill="none"/>
+                    <!-- Right Whisker Lines -->
+                    <path d="M95 68l8-2" stroke="currentColor" stroke-width="1" fill="none"/>
+                    <path d="M95 72l8 0" stroke="currentColor" stroke-width="1" fill="none"/>
+                    <path d="M95 76l8 2" stroke="currentColor" stroke-width="1" fill="none"/>
+                    <!-- Inner Ear Details -->
+                    <path d="M48 30c1-1 2-1 3-1 1 0 2 0 3 1 1 1 1 3 0 4-1 1-2 1-3 0-2-1-2-3-3-4z"/>
+                    <path d="M102 30c-1-1-2-1-3-1-1 0-2 0-3 1-1 1-1 3 0 4 1 1 2 1 3 0 2-1 2-3 3-4z"/>
+                </svg>
+            </div>
+
             <div class="mb-8">
                 <pre class="font-pixel text-retro-green text-2xl md:text-4xl leading-none">
 ██████╗ ███████╗████████╗██████╗  ██████╗
@@ -597,6 +638,28 @@
 
             <div class="font-terminal text-retro-green text-sm animate-pulse">
                 RETRO_ZONE OS v1.0.0 | © 2024
+            </div>
+
+            <!-- Rabbit hole text overlay -->
+            <div id="rabbit-hole-overlay" class="absolute bottom-4 left-1/2 transform -translate-x-1/2 text-center hidden">
+                <div class="font-pixel text-retro-green text-sm mb-1">
+                    Вниз по кроличьей норе
+                </div>
+                <div class="font-terminal text-retro-amber text-xs">
+                    Press any key
+                </div>
+            </div>
+        </div>
+
+        <!-- RABBIT HOLE SCREEN -->
+        <div id="rabbit-hole" class="text-center hidden">
+            <div class="mb-8">
+                <div class="font-pixel text-retro-green text-2xl md:text-4xl mb-4">
+                    Вниз по кроличьей норе
+                </div>
+                <div class="font-terminal text-retro-amber text-lg md:text-xl">
+                    Press any key
+                </div>
             </div>
         </div>
     </div>
@@ -672,7 +735,7 @@
                 if (!audioContext) initAudio();
 
                 // Create realistic door knocking sounds
-                const knocks = [0, 200, 400];
+                const knocks = [0, 200];
                 knocks.forEach((delay, index) => {
                     setTimeout(() => {
                         const t = audioContext.currentTime;
@@ -764,16 +827,16 @@
                             // Last line completed - play knocking sound after "Тук тук"
                             setTimeout(() => {
                                 playKnockingSound();
-                                // Start CRT implode effect after knocking
+                                // Start BIOS preloader first
+                                initBIOSPreloader();
+                                // Small delay to ensure BIOS preloader is rendered, then start CRT implode
                                 setTimeout(() => {
                                     matrixPreloader.classList.add('crt-implode');
                                     setTimeout(() => {
                                         matrixPreloader.style.display = 'none';
-                                        // Start BIOS preloader
-                                        initBIOSPreloader();
-                                    }, 1500); // Wait for implode animation
-                                }, 1000);
-                            }, 500);
+                                    }, 1500); // Wait for implode animation then hide Matrix
+                                }, 50); // Small delay to ensure BIOS is visible
+                            }, 1000);
                         }
                     }
                 }
@@ -803,6 +866,8 @@
         // --- BIOS PRELOADER LOGIC ---
         function initBIOSPreloader() {
             const preloader = document.getElementById('preloader');
+            const biosLoading = document.getElementById('bios-loading');
+            const rabbitHole = document.getElementById('rabbit-hole');
             const progressBar = document.getElementById('progress-bar');
             const biosText = document.getElementById('bios-text');
             const memoryText = document.getElementById('memory-text');
@@ -810,6 +875,8 @@
 
             // Show BIOS preloader
             preloader.style.display = 'flex';
+            biosLoading.style.display = 'block';
+            rabbitHole.style.display = 'none';
 
             let progress = 0;
             let stage = 0;
@@ -822,11 +889,27 @@
 
             function updateProgress() {
                 if (progress >= 100) {
-                    // Hide preloader and show content
-                    preloader.style.opacity = '0';
-                    setTimeout(() => {
-                        preloader.style.display = 'none';
-                    }, 500);
+                    // BIOS loading complete - show rabbit hole overlay
+                    const rabbitHoleOverlay = document.getElementById('rabbit-hole-overlay');
+                    if (rabbitHoleOverlay) {
+                        rabbitHoleOverlay.classList.remove('hidden');
+                    }
+
+                    // Add event listeners for rabbit hole interaction
+                    function handleRabbitHoleInteraction() {
+                        document.removeEventListener('keydown', handleRabbitHoleInteraction);
+                        document.removeEventListener('click', handleRabbitHoleInteraction);
+
+                        // Hide preloader and show main content
+                        preloader.style.opacity = '0';
+                        setTimeout(() => {
+                            preloader.style.display = 'none';
+                        }, 500);
+                    }
+
+                    document.addEventListener('keydown', handleRabbitHoleInteraction);
+                    document.addEventListener('click', handleRabbitHoleInteraction);
+
                     return;
                 }
 
